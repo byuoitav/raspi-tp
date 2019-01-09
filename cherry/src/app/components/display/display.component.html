@@ -1,82 +1,108 @@
 <div class="outputs">
-    <!-- 
+  <!--
         As outputs get closer to the sides of the screen,
         lets make the fade?
         
         And then users can swipe left/right to access more displays if there are more
     -->
-    <div *ngFor="let d of preset?.displays">
-        <button mat-button 
-            class="output mat-elevation-z15"
-            [color]="selectedDisplays.has(d) ? 'accent' : ''" 
-            (click)="toggleDisplay(d)" 
-            [class.mat-raised-button]="selectedDisplays.has(d)">
+  <div *ngFor="let d of preset?.displays">
+    <button
+      mat-button
+      class="output mat-elevation-z15"
+      [color]="selectedDisplays.has(d) ? 'accent' : ''"
+      (click)="
+        toggleDisplay(d); command.buttonPress('selected display', d?.name)
+      "
+      [class.mat-raised-button]="selectedDisplays.has(d)"
+    >
+      <!-- i need to see if that works (up two lines) -->
 
-            <span>{{d?.displayname}}</span>
+      <span>{{ d?.displayname }}</span>
 
-            <div class="icon">
-                <i *ngIf="!d.blanked; else blankicon" class="material-icons">{{d?.getInputIcon()}}</i>
-            </div>
+      <div class="icon">
+        <i *ngIf="!d.blanked; else blankicon" class="material-icons">{{
+          d?.getInputIcon()
+        }}</i>
+      </div>
 
-            <ng-container *ngIf="d.power != 'standby'; else powerOff">
-                <ng-container *ngIf="!d.blanked; else blanked">
-                    <span>{{d?.input?.displayname}}</span>
-                </ng-container>
+      <ng-container *ngIf="d.power != 'standby'; else powerOff">
+        <ng-container *ngIf="!d.blanked; else blanked">
+          <span>{{ d?.input?.displayname }}</span>
+        </ng-container>
 
-                <ng-template #blanked>
-                    <span>Blank</span>
-                </ng-template>
-            </ng-container>
-            <ng-template #powerOff>
-                <span>off</span>
-            </ng-template>
-        </button>
-    </div>
+        <ng-template #blanked> <span>Blank</span> </ng-template>
+      </ng-container>
+      <ng-template #powerOff> <span>off</span> </ng-template>
+    </button>
+  </div>
 </div>
 
 <div class="inputs">
-    <!-- blank button -->
-    <div>
-        <button mat-button 
-            class="input mat-elevation-z7"
-            [color]="isOneBlanked() ? 'accent' : ''"
-            (click)="blank()"
-            [class.mat-raised-button]="isOneBlanked()">
+  <!-- blank button -->
+  <div>
+    <button
+      mat-button
+      class="input mat-elevation-z7"
+      [color]="isOneBlanked() ? 'accent' : ''"
+      (click)="blank(); command.buttonPress('blank', getSelectedDisplayNames())"
+      [class.mat-raised-button]="isOneBlanked()"
+    >
+      <div class="icon">
+        <ng-container *ngTemplateOutlet="blankicon"></ng-container>
+        <span>Blank</span>
+      </div>
+    </button>
+  </div>
 
-            <div class="icon">
-                <ng-container *ngTemplateOutlet="blankicon"></ng-container>
-                <span>Blank</span>
-            </div>
-        </button>
-    </div>
-
-    <!-- inputs -->
-    <div *ngFor="let i of preset?.inputs">
-        <button mat-button 
-            class="input mat-elevation-z7"
-            [color]="inputUsed(i) ? 'accent' : ''"
-            (click)="changeInput(i)"
-            (press)="openInputDialog(i)"
-            [class.mat-raised-button]="inputUsed(i)">
-
-            <div class="icon">
-                <i class="material-icons">{{i.icon}}</i>
-                <span>{{i.displayname}}</span>
-            </div>
-        </button>
-    </div>
+  <!-- inputs -->
+  <div *ngFor="let i of preset?.inputs">
+    <button
+      mat-button
+      class="input mat-elevation-z7"
+      [color]="inputUsed(i) ? 'accent' : ''"
+      (click)="
+        changeInput(i);
+        command.buttonPress('change input', {
+          input: i.name,
+          displays: getSelectedDisplayNames()
+        })
+      "
+      (press)="
+        openInputDialog(i); command.buttonPress('long press input', i.name)
+      "
+      [class.mat-raised-button]="inputUsed(i)"
+    >
+      <div class="icon">
+        <i class="material-icons">{{ i.icon }}</i>
+        <span>{{ i.displayname }}</span>
+      </div>
+    </button>
+  </div>
 </div>
 
 <!-- Display component only controls the audioDevices in the "audioDevices" array of the UIConfig -->
 <div class="volume">
-    <volume
+  <volume
     [level]="preset?.masterVolume"
     [mute]="preset?.masterVolume == 0"
-    (levelChange)="command.setMasterVolume($event, preset)"
-    (muteChange)="setMasterMute($event.muted)">
-    </volume>
+    (levelChange)="
+      command.setMasterVolume($event, preset);
+      command.buttonPress('master volume set on display page', {
+        level: $event
+      })
+    "
+    (muteChange)="
+      setMasterMute($event.muted);
+      command.buttonPress(
+        'master volume ' +
+          ($event.muted ? 'mute' : 'unmute') +
+          ' on display page'
+      )
+    "
+  >
+  </volume>
 </div>
 
 <ng-template #blankicon>
-    <i class="material-icons">crop_landscape</i>
+  <i class="material-icons">crop_landscape</i>
 </ng-template>

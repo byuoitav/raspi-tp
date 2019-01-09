@@ -2,6 +2,7 @@ import { Component, Inject } from "@angular/core";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 
 import { APIService } from "../services/api.service";
+import { CommandService } from "../services/command.service";
 
 @Component({
   selector: "confirm-help",
@@ -15,11 +16,11 @@ import { APIService } from "../services/api.service";
         <div mat-dialog-actions class="items secondary-theme">
             <button mat-raised-button
                 color="warn"
-                (click)="cancel()">Cancel
+                (click)="cancel(); command.buttonPress('cancel help request')">Cancel
                 </button>
             <button mat-raised-button
                 color="primary"
-                (click)="confirmHelp()">Confirm
+                (click)="confirmHelp(); command.buttonPress('confirm help request')">Confirm
                 </button>
         </div>
     `,
@@ -43,7 +44,8 @@ export class ConfirmHelpDialog {
   constructor(
     public dialogRef: MatDialogRef<ConfirmHelpDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public api: APIService
+    public api: APIService,
+    public command: CommandService,
   ) {}
 
   public confirmHelp() {

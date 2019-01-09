@@ -12,19 +12,19 @@ import { ConfirmHelpDialog } from "./confirmhelp.dialog";
         <div mat-dialog-actions class="items">
             <button mat-raised-button
                 color="primary"
-                (click)="cancel()">
+                (click)="cancel(); command.buttonPress('exit via control modal', this.data['via']?.name)">
                 Cancel
             </button>
             <div class="secondary-theme">
                 <button mat-raised-button
                     color="warn"
-                    (click)="viaControl('reset')">
+                    (click)="viaControl('reset'); command.buttonPress('reset via', this.data['via']?.name)">
                     Reset
                 </button>
             </div>
             <button mat-raised-button
                 color="warn"
-                (click)="viaControl('reboot')">
+                (click)="viaControl('reboot'); command.buttonPress('reboot via', this.data['via']?.name)">
                 Reboot
                 </button>
         </div>

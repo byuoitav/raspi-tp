@@ -1,104 +1,106 @@
 <div class="base mat-app-background">
+  <!-- management pattern -->
+  <management [enabled]="isPoweredOff()"></management>
 
-<!-- management pattern -->
-<management [enabled]="isPoweredOff()"></management>
+  <ng-container *ngIf="loaded; else loading">
+    <div
+      *ngIf="isPoweredOff(); else home"
+      class="lock"
+      (click)="unlock(); command.buttonPress('power on')"
+    >
+      <ng-container *ngIf="!unlocking; else poweringOn">
+        <!-- byu logo -->
+        <object
+          type="image/svg+xml"
+          data="./assets/byu_medallion_white.svg"
+          class="logo"
+        >
+        </object>
 
-<ng-container *ngIf="loaded; else loading">
-    <div *ngIf="isPoweredOff(); else home"
-        class="lock"
-        (click)="unlock()">
+        <!-- unlock text -->
+        <span class="text">Touch anywhere to start</span>
+      </ng-container>
 
-        <ng-container *ngIf="!unlocking; else poweringOn">
-            <!-- byu logo -->
-            <object type="image/svg+xml"
-                data="./assets/byu_medallion_white.svg"
-                class="logo">
-            </object>
-
-            <!-- unlock text -->
-            <span class="text">Touch anywhere to start</span>
-        </ng-container>
-
-        <ng-template #poweringOn>
-            <div class="logo">
-                <mat-spinner color="accent"></mat-spinner>
-            </div>
-            <span class="text smaller">powering on, please wait...</span>
-        </ng-template>
+      <ng-template #poweringOn>
+        <div class="logo"><mat-spinner color="accent"></mat-spinner></div>
+        <span class="text smaller">powering on, please wait...</span>
+      </ng-template>
     </div>
-</ng-container>
+  </ng-container>
 
-
-<ng-template #home>
+  <ng-template #home>
     <ng-container *ngIf="data?.panel?.preset?.displays?.length > 0">
-        <button mat-raised-button
-            color="warn"
-            class="power"
-            (click)="powerOff()">
-            Power Off
-        </button>
+      <button
+        mat-raised-button
+        color="warn"
+        class="power"
+        (click)="powerOff(); command.buttonPress('power off')"
+      >
+        Power Off
+      </button>
     </ng-container>
 
     <div class="secondary-theme">
-        <button mat-raised-button
-            class="help"
-            color="accent"
-            (click)="openHelpDialog()">
-            Help
-        </button>
+      <button
+        mat-raised-button
+        class="help"
+        color="accent"
+        (click)="openHelpDialog(); command.buttonPress('open help modal')"
+      >
+        Help
+      </button>
     </div>
 
     <!-- home screen if there are displays -->
     <ng-container *ngIf="data?.panel?.preset?.displays?.length > 0">
-        <mat-tab-group
-            backgroundColor="primary"
-            color="accent"
-            [(selectedIndex)]="selectedTabIndex">
+      <mat-tab-group
+        backgroundColor="primary"
+        color="accent"
+        [(selectedIndex)]="selectedTabIndex"
+        (selectedTabChange)="
+          command.buttonPress('tab changed to ' + $event.tab.textLabel)
+        "
+      >
+        <mat-tab label="Display">
+          <!-- display component -->
+          <display [preset]="data?.panel?.preset"> </display>
+        </mat-tab>
 
-            <mat-tab label="Display">
-                <!-- display component -->
-                <display
-                    [preset]="data?.panel?.preset">
-                </display>
-            </mat-tab>
-
-            <mat-tab label="Audio Control">
-                <!-- audio control -->
-                <!-- requires weird trick (*ngIf) to make animations work when the tab is opened -->
-                <audiocontrol
-                    *ngIf="selectedTabIndex == 1"
-                    [@delay]
-                    [preset]="data?.panel?.preset"
-                    [audioGroups]="!data?.panel?.features?.includes('no-audio-groups')">
-                </audiocontrol>
-            </mat-tab>
-        </mat-tab-group>
+        <mat-tab label="Audio Control">
+          <!-- audio control -->
+          <!-- requires weird trick (*ngIf) to make animations work when the tab is opened -->
+          <audiocontrol
+            *ngIf="selectedTabIndex == 1"
+            [@delay]
+            [preset]="data?.panel?.preset"
+            [audioGroups]="!data?.panel?.features?.includes('no-audio-groups')"
+          >
+          </audiocontrol>
+        </mat-tab>
+      </mat-tab-group>
     </ng-container>
 
     <!-- if there are no displays -->
     <ng-container>
-        <mat-tab-group
-            backgroundColor="primary"
-            color="accent">
-
-            <mat-tab label="Audio Control">
-                <!-- audio control -->
-                <audiocontrol
-                    [preset]="data?.panel?.preset"
-                    [audioGroups]="!data?.panel?.features?.includes('no-audio-groups')">
-                </audiocontrol>
-            </mat-tab>
-        </mat-tab-group>
+      <mat-tab-group backgroundColor="primary" color="accent">
+        <mat-tab label="Audio Control">
+          <!-- audio control -->
+          <audiocontrol
+            [preset]="data?.panel?.preset"
+            [audioGroups]="!data?.panel?.features?.includes('no-audio-groups')"
+          >
+          </audiocontrol>
+        </mat-tab>
+      </mat-tab-group>
     </ng-container>
-</ng-template>
+  </ng-template>
 
-<ng-template #loading>
+  <ng-template #loading>
     <management></management>
 
     <div class="loading">
-        <mat-spinner color="accent"></mat-spinner>
-        <span>loading, please wait</span>
+      <mat-spinner color="accent"></mat-spinner>
+      <span>loading, please wait</span>
     </div>
-</ng-template>
-
+  </ng-template>
 </div>

@@ -2,6 +2,7 @@ import { Component, Inject } from "@angular/core";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 
 import { APIService } from "../services/api.service";
+import { CommandService } from "../services/command.service";
 import { ConfirmHelpDialog } from "./confirmhelp.dialog";
 
 @Component({
@@ -21,12 +22,12 @@ import { ConfirmHelpDialog } from "./confirmhelp.dialog";
         <div mat-dialog-actions class="items secondary-theme">
             <button mat-raised-button
                 color="warn"
-                (click)="cancel()">Cancel
+                (click)="cancel(); command.buttonPress('exit help modal')">Cancel
             </button>
             <button mat-raised-button
                 *ngIf="!isAfterHours()"
                 color="primary"
-                (click)="requestHelp()">Request Help
+                (click)="requestHelp(); command.buttonPress('request help')">Request Help
                 </button>
         </div>
     `,
@@ -51,7 +52,8 @@ export class HelpDialog {
     public dialogRef: MatDialogRef<HelpDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialog: MatDialog,
-    public api: APIService
+    public api: APIService,
+    public command: CommandService,
   ) {}
 
   public requestHelp() {

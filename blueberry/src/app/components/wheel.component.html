@@ -1,94 +1,240 @@
-<div *ngIf="blur" class="background" [class.open]="circleOpen" (click)="toggle()">
-</div>
+<div
+  *ngIf="blur"
+  class="background"
+  [class.open]="circleOpen"
+  (click)="toggle()"
+></div>
 
-<div class="circle" [ngStyle]="{'margin-top': top, 'margin-left': right, 'z-index': circleOpen ? 10 : 0, 'transform': circleOpen ? translate : 'translate(0,0)'}">
-	<!-- wheel -->
-	<ul #wheel class="wheel" [class.open]="circleOpen">
-		<li class="title-slice">
-            <div></div>
-		</li>
-	
-		<li *ngFor="let i of preset.inputs" class="input-slice" [class.selected-input]="getInput() === i" [class.grey]="sharing && i.reachableDisplays.length === 1"(click)="i.click.emit()" (press)="openInputModal(i)">
-            <div class="input" [style.top]="topoffset" [style.right]="rightoffset">
-				<i class="material-icons">{{i.icon}}</i>
-				<span class="name">{{i.displayname}}</span>
-			</div>
-		</li>
+<div
+  class="circle"
+  [ngStyle]="{
+    'margin-top': top,
+    'margin-left': right,
+    'z-index': circleOpen ? 10 : 0,
+    transform: circleOpen ? translate : 'translate(0,0)'
+  }"
+>
+  <!-- wheel -->
+  <ul #wheel class="wheel" [class.open]="circleOpen">
+    <li class="title-slice" (click)="command.buttonPress('title slice')">
+      <div></div>
+    </li>
 
-		<li *ngFor="let i of preset.extraInputs" class="input-slice" [class.selected-input]="getInput() === i" (click)="i.click.emit()" (press)="openInputModal(i)">
-			<div class="input" [class.grey]="sharing && i.reachableDisplays.length === 1" [style.top]="topoffset" [style.right]="rightoffset">
-				<i class="material-icons">{{i.icon}}</i>
-				<span class="name">{{i.displayname}}</span>
-			</div>
-		</li>
-	
-		<!-- lines -->
-		<li class="thin">
-			<div class="line">
-			</div>
-		</li>
-	
-		<li *ngFor="let i of preset.inputs" class="thin">
-			<div class="line">
-			</div>
-		</li>
+    <li
+      *ngFor="let i of preset.inputs"
+      class="input-slice"
+      [class.selected-input]="getInput() === i"
+      [class.grey]="sharing && i.reachableDisplays.length === 1"
+      (click)="
+        i.click.emit();
+        command.buttonPress('change input', {
+          input: i?.name,
+          displays: getDisplayNames()
+        })
+      "
+      (press)="command.buttonPress('long press remirror', i?.displayname)"
+    >
+      <div class="input" [style.top]="topoffset" [style.right]="rightoffset">
+        <i class="material-icons">{{ i.icon }}</i>
+        <span class="name">{{ i.displayname }}</span>
+      </div>
+    </li>
 
-		<li *ngFor="let i of preset.extraInputs" class="thin">
-			<div class="line">
-			</div>
-		</li>
-	</ul>
-	
-	<div class="center" [class.open]="circleOpen" [class.on]="getPower() == 'on'">
-        <span class="center-item name" [class.open]="circleOpen">{{preset.name}}</span>
-        <i class="center-item material-icons icon" [class.open]="circleOpen">{{preset.icon}}</i>
-        <span *ngIf="!getBlank()" class="center-item picture" [class.open]="circleOpen">picture on</span>
-        <span *ngIf="getBlank()" class="center-item picture" [class.open]="circleOpen">picture off</span>
-        <div class="center-item switch" [class.open]="circleOpen" (click)="$event.stopPropagation()">
-            <ui-switch reverse size="medium" [checked]="getBlank()" defaultBgColor="#f44336" (change)="command.setBlank($event, preset.displays)"></ui-switch>
-        </div>
-	</div>
-</div>
+    <li
+      *ngFor="let i of preset.extraInputs"
+      class="input-slice"
+      [class.selected-input]="getInput() === i"
+      (click)="i.click.emit()"
+      (press)="
+        openInputModal(i); command.buttonPress('long press input', i?.name)
+      "
+    >
+      <div
+        class="input"
+        [class.grey]="sharing && i.reachableDisplays.length === 1"
+        [style.top]="topoffset"
+        [style.right]="rightoffset"
+      >
+        <i class="material-icons">{{ i.icon }}</i>
+        <span class="name">{{ i.displayname }}</span>
+      </div>
+    </li>
 
-<ng-container *ngIf="preset?.audioDevices.length > 0 || preset?.independentAudioDevices?.length > 0">
-<div class="volume" [class.muted]="getMute()" *ngIf="circleOpen" [class.independentAudio]="preset?.independentAudioDevices?.length > 0">
-    <mat-slider id="slider" vertical [class.notouch]="getMute()" [disabled]="getMute()" [value]="getVolume()" [step]="5" [thumbLabel]="thumbLabel" (change)="command.setVolume($event.value, preset.audioDevices); closeThumb()"></mat-slider>
+    <!-- lines -->
+    <li class="thin"><div class="line"></div></li>
 
-	<button mat-fab class="mute" [class.muted]="getMute()" (click)="command.setMute(!getMute(), preset.audioDevices);">
-        <mat-icon *ngIf="getMute()">volume_off</mat-icon>
-        <mat-icon *ngIf="!getMute()">volume_up</mat-icon>
-    </button>
-</div>
-<ng-container>
+    <li *ngFor="let i of preset.inputs" class="thin">
+      <div class="line"></div>
+    </li>
 
-<!-- one 'slice' of wheel -->
-<svg id='svg-block' width="0" height="0" style="position: absolute;">
-  <defs>
-    <clipPath clipPathUnits="objectBoundingBox" id="sector">
-		<path fill="transparent" stroke="#111" stroke-width="1" id="sector" [attr.d]="arcpath"></path>
-    </clipPath>
-  </defs>
-</svg>
+    <li *ngFor="let i of preset.extraInputs" class="thin">
+      <div class="line"></div>
+    </li>
+  </ul>
 
-<!-- title slice -->
-<svg id='svg-block' width="0" height="0" style="position: absolute;">
-  <defs>
-    <clipPath clipPathUnits="objectBoundingBox" id="title-sector">
-		<path fill="transparent" stroke="#111" stroke-width="1" id="sector" [attr.d]="titlearcpath"></path>
-    </clipPath>
-  </defs>
-</svg>
-
-<!-- via reset/reboot modal -->
-<swal #via
-    title="VIA Control"
-    type="info"
-    text="i should be hidden"
-    [showConfirmButton]="false"
-    [showCancelButton]="false">
-
-    <div *swalPartial="swalTargets.content">
-        <button type="button" class="btn-neutral swal2-styled" (click)="via.nativeSwal.clickCancel()">Cancel</button>
-        <button type="button" class="btn-warn swal2-styled" (click)="viaControl('reset')">Reset</button>
-        <button type="button" class="btn-danger swal2-styled" (click)="viaControl('reboot')">Reboot</button>
+  <div
+    class="center"
+    [class.open]="circleOpen"
+    [class.on]="getPower() == 'on'"
+    (click)="command.buttonPress('circle center pressed')"
+  >
+    <span class="center-item name" [class.open]="circleOpen">{{
+      preset.name
+    }}</span>
+    <i
+      class="center-item material-icons icon"
+      [class.open]="circleOpen"
+      (click)="
+        command.buttonPress('circle center pressed'); $event.stopPropagation()
+      "
+      >{{ preset.icon }}</i
+    >
+    <span
+      *ngIf="!getBlank()"
+      class="center-item picture"
+      [class.open]="circleOpen"
+      >picture on</span
+    >
+    <span
+      *ngIf="getBlank()"
+      class="center-item picture"
+      [class.open]="circleOpen"
+      >picture off</span
+    >
+    <div
+      class="center-item switch"
+      [class.open]="circleOpen"
+      (click)="$event.stopPropagation()"
+    >
+      <ui-switch
+        reverse
+        size="medium"
+        [checked]="getBlank()"
+        defaultBgColor="#f44336"
+        (change)="
+          command.setBlank($event, preset.displays);
+          command.buttonPress($event ? 'blank' : 'unblank', getDisplayNames())
+        "
+      ></ui-switch>
     </div>
+  </div>
+</div>
+
+<ng-container
+  *ngIf="
+    preset?.audioDevices.length > 0 ||
+    preset?.independentAudioDevices?.length > 0
+  "
+>
+  <div
+    class="volume"
+    [class.muted]="getMute()"
+    *ngIf="circleOpen"
+    [class.independentAudio]="preset?.independentAudioDevices?.length > 0"
+  >
+    <mat-slider
+      id="slider"
+      vertical
+      [class.notouch]="getMute()"
+      [disabled]="getMute()"
+      [value]="getVolume()"
+      [step]="5"
+      [thumbLabel]="thumbLabel"
+      (change)="
+        command.setVolume($event.value, preset.audioDevices);
+        closeThumb();
+        command.buttonPress('volume set', {
+          level: $event.value,
+          audioDevices: getAudioNames()
+        })
+      "
+    ></mat-slider>
+
+    <button
+      mat-fab
+      class="mute"
+      [class.muted]="getMute()"
+      (click)="
+        command.setMute(!getMute(), preset.audioDevices);
+        command.buttonPress(getMute() ? 'mute' : 'unmute', getAudioNames())
+      "
+    >
+      <mat-icon *ngIf="getMute()">volume_off</mat-icon>
+      <mat-icon *ngIf="!getMute()">volume_up</mat-icon>
+    </button>
+  </div>
+  <ng-container>
+    <!-- one 'slice' of wheel -->
+    <svg id="svg-block" width="0" height="0" style="position: absolute;">
+      <defs>
+        <clipPath clipPathUnits="objectBoundingBox" id="sector">
+          <path
+            fill="transparent"
+            stroke="#111"
+            stroke-width="1"
+            id="sector"
+            [attr.d]="arcpath"
+          ></path>
+        </clipPath>
+      </defs>
+    </svg>
+
+    <!-- title slice -->
+    <svg id="svg-block" width="0" height="0" style="position: absolute;">
+      <defs>
+        <clipPath clipPathUnits="objectBoundingBox" id="title-sector">
+          <path
+            fill="transparent"
+            stroke="#111"
+            stroke-width="1"
+            id="sector"
+            [attr.d]="titlearcpath"
+          ></path>
+        </clipPath>
+      </defs>
+    </svg>
+
+    <!-- via reset/reboot modal -->
+    <swal
+      #via
+      title="VIA Control"
+      type="info"
+      text="i should be hidden"
+      [showConfirmButton]="false"
+      [showCancelButton]="false"
+    >
+      <div *swalPartial="swalTargets.content">
+        <button
+          type="button"
+          class="btn-neutral swal2-styled"
+          (click)="
+            via.nativeSwal.clickCancel();
+            command.buttonPress('exit via control modal', openInput?.name)
+          "
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn-warn swal2-styled"
+          (click)="
+            viaControl('reset');
+            command.buttonPress('reset via', openInput?.name)
+          "
+        >
+          Reset
+        </button>
+        <button
+          type="button"
+          class="btn-danger swal2-styled"
+          (click)="
+            viaControl('reboot');
+            command.buttonPress('reboot via', openInput?.name)
+          "
+        >
+          Reboot
+        </button>
+      </div>
+    </swal></ng-container
+  ></ng-container
+>

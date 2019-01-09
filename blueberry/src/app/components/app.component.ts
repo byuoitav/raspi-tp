@@ -8,6 +8,7 @@ import {
 
 import { APIService } from "../services/api.service";
 import { DataService } from "../services/data.service";
+import { CommandService } from "../services/command.service";
 import { SocketService } from "../services/socket.service";
 import { Preset, Panel } from "../objects/objects";
 import {
@@ -36,7 +37,11 @@ export class AppComponent {
 
   public location = window.location;
 
-  constructor(private api: APIService, public socket: SocketService) {}
+  constructor(
+    private api: APIService,
+    public socket: SocketService,
+    public command: CommandService
+  ) {}
 
   public unlock() {
     if (this.home.wheel == null) {

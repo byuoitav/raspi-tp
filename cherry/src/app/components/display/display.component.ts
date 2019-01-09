@@ -117,4 +117,13 @@ export class DisplayComponent {
         break;
     }
   }
+
+  public getSelectedDisplayNames(): string[] {
+    const displays: string[] = [];
+    this.selectedDisplays.forEach(d => {
+      displays.push(d.name);
+    });
+
+    return displays;
+  }
 }

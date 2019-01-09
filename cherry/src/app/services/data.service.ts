@@ -98,72 +98,76 @@ export class DataService {
       );
     }
 
-    for (const status of APIService.room.status.displays) {
-      const config = APIService.room.config.devices.find(
-        d => d.name === status.name
-      );
-      const deviceConfig = APIService.room.uiconfig.outputConfiguration.find(
-        d => d.name === status.name
-      );
+    if (APIService.room.status.displays != null) {
+      for (const status of APIService.room.status.displays) {
+        const config = APIService.room.config.devices.find(
+          d => d.name === status.name
+        );
+        const deviceConfig = APIService.room.uiconfig.outputConfiguration.find(
+          d => d.name === status.name
+        );
 
-      if (config != null) {
-        if (deviceConfig != null) {
-          const d = new Display(
-            status.name,
-            config.display_name,
-            status.power,
-            Input.getInput(status.input, this.inputs),
-            status.blanked,
-            deviceConfig.icon
-          );
-          this.displays.push(d);
+        if (config != null) {
+          if (deviceConfig != null) {
+            const d = new Display(
+              status.name,
+              config.display_name,
+              status.power,
+              Input.getInput(status.input, this.inputs),
+              status.blanked,
+              deviceConfig.icon
+            );
+            this.displays.push(d);
+          } else {
+            console.warn(
+              "No device configuration found for this display: ",
+              status.name
+            );
+          }
         } else {
-          console.warn(
-            "No device configuration found for this display: ",
-            status.name
-          );
+          console.warn("No configuration found for this display:", status.name);
         }
-      } else {
-        console.warn("No configuration found for this display:", status.name);
       }
     }
 
     console.info("Displays", this.displays);
 
     // create audioDevices
-    for (const status of APIService.room.status.audioDevices) {
-      const config = APIService.room.config.devices.find(
-        d => d.name === status.name
-      );
-      const deviceConfig = APIService.room.uiconfig.outputConfiguration.find(
-        d => d.name === status.name
-      );
+    if (APIService.room.status.audioDevices != null) {
+      for (const status of APIService.room.status.audioDevices) {
+        const config = APIService.room.config.devices.find(
+          d => d.name === status.name
+        );
+        const deviceConfig = APIService.room.uiconfig.outputConfiguration.find(
+          d => d.name === status.name
+        );
 
-      if (config != null) {
-        if (deviceConfig != null) {
-          const a = new AudioDevice(
-            status.name,
-            config.display_name,
-            status.power,
-            Input.getInput(status.input, this.inputs),
-            status.muted,
-            status.volume,
-            deviceConfig.icon,
-            config.type._id,
-            100
-          );
-          this.audioDevices.push(a);
+        if (config != null) {
+          if (deviceConfig != null) {
+            const a = new AudioDevice(
+              status.name,
+              config.display_name,
+              status.power,
+              Input.getInput(status.input, this.inputs),
+              status.muted,
+              status.volume,
+              deviceConfig.icon,
+              config.type._id,
+              100
+            );
+            this.audioDevices.push(a);
+          } else {
+            console.warn(
+              "No output configuration for this audio device (check the ui config): ",
+              status.name
+            );
+          }
         } else {
           console.warn(
-            "No output configuration for this audio device (check the ui config): ",
+            "No configuration found for this audio device:",
             status.name
           );
         }
-      } else {
-        console.warn(
-          "No configuration found for this audio device:",
-          status.name
-        );
       }
     }
 

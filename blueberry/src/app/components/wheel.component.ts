@@ -310,4 +310,32 @@ export class WheelComponent implements AfterContentInit {
       }
     });
   }
+
+  public getDisplayNames(): string[] {
+    const names: string[] = [];
+
+    if (this.preset == null || this.preset.displays == null) {
+      return names;
+    }
+
+    for (const d of this.preset.displays) {
+      names.push(d.name);
+    }
+
+    return names;
+  }
+
+  public getAudioNames(): string[] {
+    const names: string[] = [];
+
+    if (this.preset == null || this.preset.audioDevices == null) {
+      return names;
+    }
+
+    for (const a of this.preset.audioDevices) {
+      names.push(a.name);
+    }
+
+    return names;
+  }
 }

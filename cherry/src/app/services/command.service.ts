@@ -687,4 +687,24 @@ export class CommandService {
 
     return ret;
   }
+
+  public buttonPress(value: string, data?: any) {
+    const event = new Event();
+
+    event.EventTags = ["ui-event", "cherry-ui"];
+
+    event.AffectedRoom = new BasicRoomInfo(
+      APIService.building + "-" + APIService.roomName
+    );
+    event.TargetDevice = new BasicDeviceInfo(APIService.piHostname);
+    event.GeneratingSystem = APIService.piHostname;
+    event.Timestamp = new Date();
+    event.User = "";
+    event.Data = data;
+
+    event.Key = "user-interaction";
+    event.Value = value;
+
+    this.api.sendEvent(event);
+  }
 }

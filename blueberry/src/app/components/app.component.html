@@ -4,7 +4,7 @@
     <ng-container>
     <div *ngIf="home?.wheel?.getPower() !== 'on'"
         class="lock"
-        (click)="unlock()">
+        (click)="unlock(); command.buttonPress('power on')">
 
         <ng-container *ngIf="!unlocking; else poweringOn">
             <!-- byu logo -->

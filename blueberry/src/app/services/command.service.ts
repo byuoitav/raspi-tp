@@ -11,6 +11,7 @@ import { MatSliderChange } from "@angular/material";
 
 import { APIService } from "./api.service";
 import { DataService } from "./data.service";
+import { Event, BasicDeviceInfo, BasicRoomInfo } from "./socket.service";
 import { Input, Display, AudioDevice } from "../objects/status.objects";
 import { Preset, AudioConfig, ConfigCommand } from "../objects/objects";
 import { WheelComponent } from "../components/wheel.component";
@@ -25,8 +26,8 @@ const TIMEOUT = 12 * 1000;
 export class CommandService {
   private options: RequestOptions;
 
-  constructor(private http: Http, private data: DataService) {
-    let headers = new Headers();
+  constructor(private http: Http, private data: DataService, private api: APIService) {
+    const headers = new Headers();
     headers.append("content-type", "application/json");
     this.options = new RequestOptions({ headers: headers });
   }
@@ -46,13 +47,13 @@ export class CommandService {
   }
 
   public setPower(p: string, displays: Display[]): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
     console.log("Setting power to", p, "on", displays);
-    let prev = Display.getPower(displays);
+    const prev = Display.getPower(displays);
     Display.setPower(p, displays);
 
-    let body = { displays: [] };
-    for (let d of displays) {
+    const body = { displays: [] };
+    for (const d of displays) {
       body.displays.push({
         name: d.name,
         power: p
@@ -75,13 +76,13 @@ export class CommandService {
   public setInput(i: Input, displays: Display[]): EventEmitter<boolean> {
     //    i.click.emit();
 
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
     console.log("Changing input on", displays, "to", i.name);
-    let prev = Display.getInput(displays);
+    const prev = Display.getInput(displays);
     Display.setInput(i, displays);
 
-    let body = { displays: [] };
-    for (let d of displays) {
+    const body = { displays: [] };
+    for (const d of displays) {
       body.displays.push({
         name: d.name,
         input: i.name
@@ -102,13 +103,13 @@ export class CommandService {
   }
 
   public setBlank(b: boolean, displays: Display[]): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
     console.log("Setting blanked to", b, "on", displays);
-    let prev = Display.getBlank(displays);
+    const prev = Display.getBlank(displays);
     Display.setBlank(b, displays);
 
-    let body = { displays: [] };
-    for (let d of displays) {
+    const body = { displays: [] };
+    for (const d of displays) {
       body.displays.push({
         name: d.name,
         blanked: b
@@ -132,13 +133,13 @@ export class CommandService {
     v: number,
     audioDevices: AudioDevice[]
   ): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
     console.log("changing volume to", v, "on", audioDevices);
-    let prev = AudioDevice.getVolume(audioDevices);
+    const prev = AudioDevice.getVolume(audioDevices);
     AudioDevice.setVolume(v, audioDevices);
 
-    let body = { audioDevices: [] };
-    for (let a of audioDevices) {
+    const body = { audioDevices: [] };
+    for (const a of audioDevices) {
       body.audioDevices.push({
         name: a.name,
         volume: v
@@ -164,13 +165,13 @@ export class CommandService {
     m: boolean,
     audioDevices: AudioDevice[]
   ): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
     console.log("changing mute to", m, "on", audioDevices);
-    let prev = AudioDevice.getMute(audioDevices);
+    const prev = AudioDevice.getMute(audioDevices);
     AudioDevice.setMute(m, audioDevices);
 
-    let body = { audioDevices: [] };
-    for (let a of audioDevices) {
+    const body = { audioDevices: [] };
+    for (const a of audioDevices) {
       body.audioDevices.push({
         name: a.name,
         muted: m
@@ -195,16 +196,16 @@ export class CommandService {
     v: number,
     audioDevices: AudioDevice[]
   ): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
     console.log("changing volume to", v, "and mute to", m, "on", audioDevices);
-    let prevMute = AudioDevice.getMute(audioDevices);
+    const prevMute = AudioDevice.getMute(audioDevices);
     AudioDevice.setMute(m, audioDevices);
 
-    let prevVol = AudioDevice.getVolume(audioDevices);
+    const prevVol = AudioDevice.getVolume(audioDevices);
     AudioDevice.setVolume(v, audioDevices);
 
-    let body = { audioDevices: [] };
-    for (let a of audioDevices) {
+    const body = { audioDevices: [] };
+    for (const a of audioDevices) {
       body.audioDevices.push({
         name: a.name,
         volume: v,
@@ -227,11 +228,11 @@ export class CommandService {
   }
 
   public powerOnDefault(preset: Preset): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    let body = { displays: [], audioDevices: [] };
+    const body = { displays: [], audioDevices: [] };
 
-    for (let d of preset.displays) {
+    for (const d of preset.displays) {
       body.displays.push({
         name: d.name,
         power: "on",
@@ -240,7 +241,7 @@ export class CommandService {
       });
     }
 
-    for (let a of preset.audioDevices) {
+    for (const a of preset.audioDevices) {
       body.audioDevices.push({
         name: a.name,
         power: "on",
@@ -249,15 +250,15 @@ export class CommandService {
       });
     }
 
-    let powerOnReq = new Request({
+    const powerOnReq = new Request({
       method: "PUT",
       url: APIService.apiurl,
       body: body
     });
-    let requests: Request[] = [powerOnReq];
+    const requests: Request[] = [powerOnReq];
 
     if (preset.commands.powerOn != null) {
-      for (let cmd of preset.commands.powerOn) {
+      for (const cmd of preset.commands.powerOn) {
         requests.push(this.buildRequest(cmd));
       }
     }
@@ -274,21 +275,21 @@ export class CommandService {
     maxTries: number,
     timeout: number
   ): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
     if (requests.length < 1) {
       setTimeout(() => ret.emit(false), 250);
       return ret;
     }
 
     console.info("executing requests: ", requests);
-    let numRequests = requests.length;
-    let mapToStatus: Map<Request, boolean> = new Map();
+    const numRequests = requests.length;
+    const mapToStatus: Map<Request, boolean> = new Map();
 
-    for (let req of requests) {
+    for (const req of requests) {
       this.executeRequest(req, maxTries, timeout).subscribe(success => {
         mapToStatus.set(req, success);
 
-        if (mapToStatus.size == numRequests) {
+        if (mapToStatus.size === numRequests) {
           console.info(
             "finished all requests, requests => success:",
             mapToStatus
@@ -296,7 +297,9 @@ export class CommandService {
 
           let allsuccessful = true;
           mapToStatus.forEach((v, k) => {
-            if (!v) allsuccessful = false;
+            if (!v) {
+              allsuccessful = false;
+            }
           });
 
           ret.emit(allsuccessful);
@@ -314,7 +317,7 @@ export class CommandService {
     maxTries: number,
     timeout: number
   ): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
     console.log("executing request", req);
 
     this.http
@@ -329,7 +332,7 @@ export class CommandService {
         err => {
           maxTries--;
 
-          if (maxTries == 0) {
+          if (maxTries === 0) {
             ret.emit(false);
             return;
           }
@@ -358,17 +361,17 @@ export class CommandService {
   }
 
   public powerOff(preset: Preset): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    let body = { displays: [], audioDevices: [] };
-    for (let d of preset.displays) {
+    const body = { displays: [], audioDevices: [] };
+    for (const d of preset.displays) {
       body.displays.push({
         name: d.name,
         power: "standby"
       });
     }
 
-    for (let a of preset.audioDevices) {
+    for (const a of preset.audioDevices) {
       body.audioDevices.push({
         name: a.name,
         power: "standby"
@@ -377,15 +380,15 @@ export class CommandService {
 
     console.log("sending power off body", body);
 
-    let powerOffReq = new Request({
+    const powerOffReq = new Request({
       method: "PUT",
       url: APIService.apiurl,
       body: body
     });
-    let requests: Request[] = [powerOffReq];
+    const requests: Request[] = [powerOffReq];
 
     if (preset.commands.powerOff != null) {
-      for (let cmd of preset.commands.powerOff) {
+      for (const cmd of preset.commands.powerOff) {
         requests.push(this.buildRequest(cmd));
       }
     }
@@ -398,9 +401,9 @@ export class CommandService {
   }
 
   public powerOffAll(): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    let body = { power: "standby" };
+    const body = { power: "standby" };
 
     this.put(body).subscribe(
       data => {
@@ -415,7 +418,7 @@ export class CommandService {
   }
 
   public share(from: Display, to: Display[]): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
     if (from.input == null) {
       setTimeout(() => ret.emit(false), 150);
       return ret;
@@ -423,8 +426,8 @@ export class CommandService {
 
     console.log("sharing to", to, "from", from);
 
-    let body = { displays: [], audioDevices: [] };
-    for (let d of to) {
+    const body = { displays: [], audioDevices: [] };
+    for (const d of to) {
       body.displays.push({
         name: d.name,
         power: "on",
@@ -433,8 +436,8 @@ export class CommandService {
       });
     }
 
-    let audioConfigs = this.data.getAudioConfigurations(to);
-    let hasRoomWide = this.data.hasRoomWide(audioConfigs);
+    const audioConfigs = this.data.getAudioConfigurations(to);
+    const hasRoomWide = this.data.hasRoomWide(audioConfigs);
 
     if (hasRoomWide) {
       // mute the source device (yourself)
@@ -444,8 +447,8 @@ export class CommandService {
         volume: 0
       });
 
-      for (let config of audioConfigs) {
-        for (let audio of config.audioDevices) {
+      for (const config of audioConfigs) {
+        for (const audio of config.audioDevices) {
           body.audioDevices.push({
             name: audio.name,
             muted: !config.roomWide,
@@ -455,8 +458,8 @@ export class CommandService {
       }
     } else {
       // mute everything except for yourself
-      for (let config of audioConfigs) {
-        for (let audio of config.audioDevices) {
+      for (const config of audioConfigs) {
+        for (const audio of config.audioDevices) {
           body.audioDevices.push({
             name: audio.name,
             muted: true,
@@ -484,11 +487,11 @@ export class CommandService {
     from: Display[],
     fromAudio: AudioConfig[]
   ): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
-    let body = { displays: [], audioDevices: [] };
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const body = { displays: [], audioDevices: [] };
 
-    for (let d of from) {
-      let preset: Preset = this.data.presets.find(p => p.displays.includes(d));
+    for (const d of from) {
+      const preset: Preset = this.data.presets.find(p => p.displays.includes(d));
 
       if (preset != null) {
         body.displays.push({
@@ -500,8 +503,8 @@ export class CommandService {
       }
     }
 
-    for (let ac of fromAudio) {
-      for (let a of ac.audioDevices) {
+    for (const ac of fromAudio) {
+      for (const a of ac.audioDevices) {
         body.audioDevices.push({
           name: a.name,
           power: "on",
@@ -526,14 +529,14 @@ export class CommandService {
   }
 
   public mirror(mirror: Preset, on: Preset) {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
-    let body = { displays: [], audioDevices: [] };
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const body = { displays: [], audioDevices: [] };
 
-    let power: string = Display.getPower(mirror.displays);
-    let input: Input = Display.getInput(mirror.displays);
-    let blanked: boolean = Display.getBlank(mirror.displays);
+    const power: string = Display.getPower(mirror.displays);
+    const input: Input = Display.getInput(mirror.displays);
+    const blanked: boolean = Display.getBlank(mirror.displays);
 
-    for (let d of on.displays) {
+    for (const d of on.displays) {
       body.displays.push({
         name: d.name,
         power: power,
@@ -542,7 +545,7 @@ export class CommandService {
       });
     }
 
-    for (let a of on.audioDevices) {
+    for (const a of on.audioDevices) {
       body.audioDevices.push({
         name: a.name,
         muted: true
@@ -562,13 +565,13 @@ export class CommandService {
   }
 
   public viaControl(via: Input, endpoint: string): EventEmitter<boolean> {
-    let ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     // get the address of the via
-    let config = this.data.getInputConfiguration(via);
+    const config = this.data.getInputConfiguration(via);
 
     // build the request
-    let req = new Request({
+    const req = new Request({
       method: "GET",
       url: APIService.apihost + ":8014/via/" + config.address + "/" + endpoint
     });
@@ -585,5 +588,25 @@ export class CommandService {
     );
 
     return ret;
+  }
+
+  public buttonPress(value: string, data?: any) {
+    const event = new Event();
+
+    event.EventTags = ["ui-event", "blueberry-ui"];
+
+    event.AffectedRoom = new BasicRoomInfo(
+      APIService.building + "-" + APIService.roomName
+    );
+    event.TargetDevice = new BasicDeviceInfo(APIService.piHostname);
+    event.GeneratingSystem = APIService.piHostname;
+    event.Timestamp = new Date();
+    event.User = "";
+    event.Data = data;
+
+    event.Key = "user-interaction";
+    event.Value = value;
+
+    this.api.sendEvent(event);
   }
 }

@@ -282,7 +282,7 @@ export class APIService {
 
   public sendEvent(event: Event) {
     const data = this.jsonConvert.serializeObject(event);
-    console.log("sending feature event", data);
+    console.log("sending event", data);
 
     this.http
       .post(APIService.localurl + ":8888/publish", data, APIService.options)
