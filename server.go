@@ -87,6 +87,8 @@ func main() {
 	router.GET("/nextapi", uiconfig.NextAPI)
 
 	router.POST("/help", handlers.GenerateHelpFunction("request", messenger))
+	router.POST("/slackhelp", handlers.Help)
+	router.POST("/handleslack", handlers.HandleSlack)
 	router.POST("/confirmhelp", handlers.GenerateHelpFunction("confirm", messenger))
 	router.POST("/cancelhelp", handlers.GenerateHelpFunction("cancel", messenger))
 
