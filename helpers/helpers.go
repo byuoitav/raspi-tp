@@ -22,6 +22,8 @@ type SlackHelp struct {
 	Room        string       `json:"room"`
 	Attachments []Attachment `json:"attachments"`
 	Text        string       `json:"text"`
+	Notes       string       `json:"notes"`
+	CallbackID  string       `json:callback_id"`
 }
 
 type SlackMessage struct {

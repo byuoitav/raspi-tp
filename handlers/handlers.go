@@ -91,6 +91,14 @@ func GenerateHelpFunction(value string, messenger *messenger.Messenger) func(ctx
 	}
 }
 
+/*TODO
+1.) Confirm that notes are properly attached to the record
+2.) Make a relevant callback id (Help needed)
+3.) Ask Joe how to upsert the record (assuming things worked well)
+
+y.) Make sure that the records are in proper form and that they can be interpreted into metrics
+*/
+
 func Help(context echo.Context) error {
 	log.Printf("Starting to help")
 
@@ -123,7 +131,7 @@ func Help(context echo.Context) error {
 	dialog.Elements = append(dialog.Elements, elemTwo)
 
 	//TODO Change this to an identifier for the issue
-	dialog.CallbackID = "helpme"
+	dialog.CallbackID = fmt.Sprintf("%v", time.Now())
 
 	//Throw it together
 	ud.Dialog = dialog
@@ -157,16 +165,17 @@ func HandleSlack(context echo.Context) error {
 	context.Request().ParseForm()
 	//Finds the callback id
 	payload := context.Request().Form["payload"][0]
-	r := regexp.MustCompile("\"callback_id\":\"(.*?)\"")
-	callback := r.FindStringSubmatch(payload)
+	log.Printf("Payload: %v", payload)
+	r := regexp.MustCompile("\"type\":\"(.*?)\"")
+	requestType := r.FindStringSubmatch(payload)
 
-	if callback[1] == "helpme" {
+	if requestType[1] == "dialog_submission" {
 		err := HandleDialog(context)
 		if err != nil {
 			log.Printf("Couldn't handle dialog: %v")
 			return context.JSON(http.StatusInternalServerError, err.Error())
 		}
-	} else if callback[1] == "help_request" {
+	} else if requestType[1] == "interactive_message" {
 		err := HandleRequest(context)
 		if err != nil {
 			log.Printf("Couldn't handle the help request: %v")
@@ -186,13 +195,15 @@ func HandleRequest(context echo.Context) error {
 	case "techsent":
 		r = regexp.MustCompile(`"user":{.*?name":"(.*?)"`)
 		techName := r.FindStringSubmatch(payload)[1]
-		//r = regexp.MustCompile("\"action_ts\":\"(.*?)\"")
-		//timeStamp := r.FindStringSubmatch(payload)[1]
+
 		r = regexp.MustCompile(`Room","value":"(.*?)"`)
 		roomID := r.FindStringSubmatch(payload)[1]
-		//TODO Add this to the display
-		//r = regexp.MustCompile("\"notes\":\"(.*?)\"")
-		//notes := r.FindStringSubmatch(payload)[1]
+
+		r = regexp.MustCompile(`Notes","value":"(.*?)"`)
+		notes := r.FindStringSubmatch(payload)[1]
+
+		r = regexp.MustCompile("\"callback_id\":\"(.*?)\"")
+		callbackID := r.FindStringSubmatch(payload)[1]
 
 		log.Printf("We sent a tech: %v at %v\n\n", techName, time.Now())
 
@@ -203,16 +214,16 @@ func HandleRequest(context echo.Context) error {
 			//TargetDevice:     events.GenerateBasicDeviceInfo("ITB-1101-CP3"), //This one is dumb and isn't real
 			//Key:              "Key?",                                         //Same
 			//Value:            "Value?",                                       //Same
-			User:      "Caleb", //Same
+			User:      techName,
 			EventTags: []string{events.HelpRequest},
-			//Data:      notes,
+			Data:      notes,
 		}
 		json, err := json.Marshal(e)
 		if err != nil {
 			log.Printf("failed to marshal sh: %v", e)
 			return err
 		}
-		url := "http://10.5.34.47:2323/hitelk"
+		url := "http://10.208.7.36:9200/caleb-test/doc/" + callbackID
 		req, err := http.NewRequest("POST", url, bytes.NewBuffer(json))
 		if err != nil {
 			log.Printf("Couldn't make the request: %v", err)
@@ -245,12 +256,18 @@ func HandleDialog(context echo.Context) error {
 	//Hopefully this gets out the room that needs help and the notes for that room
 	r1 := regexp.MustCompile("\"roomID\":\"(.*?)\"")
 	r2 := regexp.MustCompile("\"notes\":\"(.*?)\"")
+	r3 := regexp.MustCompile("\"callback_id\":\"(.*?)\"")
+
 	roomID := r1.FindStringSubmatch(payload)[1]
 	notes := r2.FindStringSubmatch(payload)[1]
+	id := r3.FindStringSubmatch(payload)[1]
+
 	log.Printf("[Follow Up] Trying to find stuff: %v ---------- %v", roomID, notes)
 	var sh helpers.SlackHelp
 	sh.Building = strings.Split(roomID, "-")[0]
 	sh.Room = roomID
+	sh.Notes = notes
+	sh.CallbackID = id
 	err := CreateAlert(sh)
 	if err != nil {
 		log.Printf("Could not create Help Request: %v", err.Error())
@@ -277,17 +294,20 @@ func CreateAlert(sh helpers.SlackHelp) error {
 	// attachment
 	var attachment helpers.Attachment
 	//attachment.Title = "Help Request"
-	attachment.CallbackID = "help_request"
+	attachment.CallbackID = sh.CallbackID
 	// fields
 	var fieldOne helpers.Field
 	var fieldTwo helpers.Field
+	var fieldThree helpers.Field
 	fieldOne.Title = "Building"
 	fieldOne.Value = sh.Building
 	fieldOne.Short = true
 	fieldTwo.Title = "Room"
 	fieldTwo.Value = sh.Room
 	fieldTwo.Short = true
-	//TODO Add ability to tell which device is acting up
+	fieldThree.Title = "Notes"
+	fieldThree.Value = sh.Notes
+	fieldThree.Short = false
 
 	// actions
 	var actionOne helpers.Action
@@ -311,6 +331,7 @@ func CreateAlert(sh helpers.SlackHelp) error {
 	// put into sh
 	attachment.Fields = append(attachment.Fields, fieldOne)
 	attachment.Fields = append(attachment.Fields, fieldTwo)
+	attachment.Fields = append(attachment.Fields, fieldThree)
 	attachment.Actions = append(attachment.Actions, actionOne)
 	attachment.Actions = append(attachment.Actions, actionTwo)
 	attachment.Actions = append(attachment.Actions, actionThree)
