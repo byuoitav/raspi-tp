@@ -5,7 +5,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import {
   MatSliderModule,
   MatIconModule,
-  MatButtonModule,
   MatMenuModule,
   MatDialogModule,
   MatGridListModule,
@@ -16,6 +15,7 @@ import {
 import { UiSwitchModule } from "ngx-ui-switch";
 import { SweetAlert2Module } from "@toverux/ngx-sweetalert2";
 import "hammerjs";
+import { MatButtonModule } from "@angular/material/button";
 
 import { AppComponent } from "./components/app.component";
 import { HomeComponent } from "./components/home.component";
@@ -38,6 +38,7 @@ import { MessageModalComponent } from "./modals/messagemodal/messagemodal.compon
 import { ErrorModalComponent } from "./modals/errormodal/errormodal.component";
 import { ErrorService } from "./services/error.service";
 import { StreamModalComponent } from "./modals/streammodal/streammodal.component";
+import { ProjectorComponent } from './components/projector/projector.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { StreamModalComponent } from "./modals/streammodal/streammodal.component
     MirrorModalComponent,
     MessageModalComponent,
     ErrorModalComponent,
-    StreamModalComponent
+    StreamModalComponent,
+    ProjectorComponent,
   ],
   imports: [
     BrowserModule,
@@ -89,7 +91,8 @@ import { StreamModalComponent } from "./modals/streammodal/streammodal.component
     MirrorModalComponent,
     MessageModalComponent,
     ErrorModalComponent,
-    StreamModalComponent
+    StreamModalComponent,
+    ProjectorComponent
   ],
   bootstrap: [AppComponent]
 })

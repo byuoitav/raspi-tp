@@ -57,6 +57,14 @@
                     <audiocontrol *ngIf="selectedTabIndex == 1" [@delay] [preset]="data?.panel?.preset" [audioGroups]="!data?.panel?.features?.includes('no-audio-groups')">
                     </audiocontrol>
                 </mat-tab>
+
+                <ng-container *ngIf="data?.panel?.preset?.screens?.length > 0">
+                    <mat-tab label="Projector Control">
+                        <!-- projector control -->
+                        <projector-control [@delay] [preset]="data?.panel?.preset">
+                        </projector-control>
+                    </mat-tab>
+                </ng-container>
             </mat-tab-group>
         </ng-container>
 
@@ -68,6 +76,14 @@
                     <audiocontrol [preset]="data?.panel?.preset" [audioGroups]="!data?.panel?.features?.includes('no-audio-groups')">
                     </audiocontrol>
                 </mat-tab>
+
+                <ng-container *ngIf="data?.panel?.preset?.screens?.length > 0">
+                    <mat-tab label="Projector Control">
+                        <!-- projector control -->
+                        <projector-control [@delay] [preset]="data?.panel?.preset">
+                        </projector-control>
+                    </mat-tab>
+                </ng-container>
             </mat-tab-group>
         </ng-container>
     </ng-template>

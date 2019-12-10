@@ -24,7 +24,7 @@ export class RoomConfiguration {
 export class DeviceConfiguration {
   _id: string;
   name: string;
-  display_name: string;
+  displayname: string;
   address: string;
 
   @Type(() => DeviceTypeConfiguration)
@@ -115,6 +115,7 @@ export class PanelConfiguration {
   uipath: string;
   features: string[];
   preset: string;
+  projectorPreset: string;
 }
 
 export class PresetConfiguration {
@@ -124,6 +125,7 @@ export class PresetConfiguration {
   shareableDisplays: string[];
   audioDevices: string[];
   inputs: string[];
+  screens: string[];
   independentAudioDevices: string[];
   volumeMatches: string[];
   audioGroups: Map<string, string[]> = new Map();
@@ -176,6 +178,7 @@ export class Preset {
   name: string;
   icon: string;
 
+  screens: DeviceConfiguration[];
   displays: Display[] = [];
   audioDevices: AudioDevice[] = [];
   inputs: Input[] = [];
@@ -200,6 +203,7 @@ export class Preset {
     displays: Display[],
     audioDevices: AudioDevice[],
     inputs: Input[],
+    screens: DeviceConfiguration[],
     shareableDisplays: string[],
     independentAudioDevices: AudioDevice[],
     audioTypes: Map<string, AudioDevice[]>,
@@ -213,6 +217,7 @@ export class Preset {
     this.displays = displays;
     this.audioDevices = audioDevices;
     this.inputs = inputs;
+    this.screens = screens;
     this.shareableDisplays = shareableDisplays;
     this.independentAudioDevices = independentAudioDevices;
     this.audioTypes = audioTypes;

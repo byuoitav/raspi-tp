@@ -913,4 +913,99 @@ export class CommandService {
 
     this.api.sendEvent(event);
   }
+
+  public projectorUp(address: string): EventEmitter<boolean> {
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const projectorUpReq1 = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: "http://localhost:8028/" + address + "/activate/2",
+      })
+    );
+    const projectorUpReq2 = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: "http://localhost:8028/" + address + "/deactivate/1",
+      })
+    );
+    const projectorUpReq3 = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: "http://localhost:8028/" + address + "/deactivate/2",
+      })
+    );
+    const requests: CommandRequest[] = [projectorUpReq1, projectorUpReq2, projectorUpReq3];
+
+    this.executeRequests(requests, 20 * 1000).subscribe(success => {
+      ret.emit(success);
+    });
+
+    return ret;
+  }
+
+  public projectorStop(address: string): EventEmitter<boolean> {
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const projectorStopReq1 = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: "http://localhost:8028/" + address + "/activate/1",
+      })
+    );
+    const projectorStopReq2 = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: "http://localhost:8028/" + address + "/activate/2",
+      })
+    );
+
+    const projectorStopReq3 = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: "http://localhost:8028/" + address + "/deactivate/1",
+      })
+    );
+    const projectorStopReq4 = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: "http://localhost:8028/" + address + "/deactivate/2",
+      })
+    );
+    const requests: CommandRequest[] = [projectorStopReq1, projectorStopReq2, projectorStopReq3, projectorStopReq4];
+
+    this.executeRequests(requests, 20 * 1000).subscribe(success => {
+      ret.emit(success);
+    });
+
+    return ret;
+  }
+
+  public projectorDown(address: string): EventEmitter<boolean> {
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const projectorDownReq1 = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: "http://localhost:8028/" + address + "/activate/1",
+      })
+    );
+
+    const projectorDownReq2 = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: "http://localhost:8028/" + address + "/deactivate/1",
+      })
+    );
+    const projectorDownReq3 = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: "http://localhost:8028/" + address + "/deactivate/2",
+      })
+    );
+    const requests: CommandRequest[] = [projectorDownReq1, projectorDownReq2, projectorDownReq3];
+
+    this.executeRequests(requests, 20 * 1000).subscribe(success => {
+      ret.emit(success);
+    });
+
+    return ret;
+  }
 }

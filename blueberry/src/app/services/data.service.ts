@@ -27,6 +27,7 @@ export class DataService {
 
   public panel: Panel;
   public inputs: Input[] = [];
+  public screens: DeviceConfiguration[] = [];
   public displays: Display[] = [];
   public audioDevices: AudioDevice[] = [];
   public audioConfig: Map<Display, AudioConfig> = new Map();
@@ -39,6 +40,7 @@ export class DataService {
     this.api.loaded.subscribe(() => {
       this.createInputs();
       this.createOutputs();
+      this.createScreens();
 
       this.createPresets();
       this.createPanels();
@@ -85,6 +87,14 @@ export class DataService {
     }
 
     console.info("Inputs", this.inputs);
+  }
+
+  private createScreens() {
+    for (const preset of APIService.room.uiconfig.presets) {
+      const screens = preset.screens
+
+
+    }
   }
 
   private createOutputs() {
@@ -185,12 +195,16 @@ export class DataService {
         this.audioDevices
       );
 
+      const screens = APIService.room.config.devices.filter(oneDevice => preset.screens.some(one => one == oneDevice.name));
+      console.info("Screens", screens)
+
       const p = new Preset(
         preset.name,
         preset.icon,
         displays,
         audioDevices,
         inputs,
+        screens,
         preset.shareablePresets,
         independentAudioDevices,
         preset.commands

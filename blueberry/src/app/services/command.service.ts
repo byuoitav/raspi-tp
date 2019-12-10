@@ -13,7 +13,7 @@ import { APIService } from "./api.service";
 import { DataService } from "./data.service";
 import { Event, BasicDeviceInfo, BasicRoomInfo } from "./socket.service";
 import { Input, Display, AudioDevice } from "../objects/status.objects";
-import { Preset, AudioConfig, ConfigCommand } from "../objects/objects";
+import { Preset, AudioConfig, ConfigCommand, DeviceConfiguration } from "../objects/objects";
 import { WheelComponent } from "../components/wheel.component";
 
 import "rxjs/add/operator/map";
@@ -637,4 +637,86 @@ export class CommandService {
 
     this.api.sendEvent(event);
   }
+
+  public projectorUp(device: DeviceConfiguration): EventEmitter<boolean> {
+    const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+    const command = device.type.commands.find(one => one._id == "ScreenUp");
+
+    if (!command) {
+        ret.emit(false);
+        return ret;
+    }
+    
+    const path = command.endpoint.path.replace(":address", device.address);
+
+    const projectorUpReq = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: command.microservice.address + path,
+      })
+    );
+
+    const requests: CommandRequest[] = [projectorUpReq];
+
+    this.executeRequests(requests, 1, 10 * 1000).subscribe(success => {
+      ret.emit(success);
+    });
+
+    return ret;
+  }
+
+  public projectorStop(device: DeviceConfiguration): EventEmitter<boolean> {    
+      const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+      const command = device.type.commands.find(one => one._id == "ScreenStop");
+
+      if (!command) {
+          ret.emit(false);
+          return ret;
+      }
+      
+      const path = command.endpoint.path.replace(":address", device.address);
+  
+      const projectorUpReq = new CommandRequest(
+        new Request({
+          method: "GET",
+          url: command.microservice.address + path,
+        })
+      );
+  
+      const requests: CommandRequest[] = [projectorUpReq];
+  
+      this.executeRequests(requests, 1, 10 * 1000).subscribe(success => {
+        ret.emit(success);
+      });
+  
+      return ret;
+    }
+  
+
+  public projectorDown(device: DeviceConfiguration): EventEmitter<boolean> {    
+      const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
+      const command = device.type.commands.find(one => one._id == "ScreenDown");
+
+      if (!command) {
+          ret.emit(false);
+          return ret;
+      }
+
+      const path = command.endpoint.path.replace(":address", device.address);
+  
+      const projectorUpReq = new CommandRequest(
+        new Request({
+          method: "GET",
+          url: command.microservice.address + path,
+        })
+      );
+  
+      const requests: CommandRequest[] = [projectorUpReq];
+  
+      this.executeRequests(requests, 1, 10 * 1000).subscribe(success => {
+        ret.emit(success);
+      });
+  
+      return ret;
+    }
 }

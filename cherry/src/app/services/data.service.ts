@@ -76,7 +76,7 @@ export class DataService {
       if (input && input.hasRole("VideoIn")) {
         const dispname = config.displayname
           ? config.displayname
-          : input.display_name;
+          : input.displayname;
 
         const subs: Input[] = [];
         console.log("does the input have subInputs?", config);
@@ -118,7 +118,7 @@ export class DataService {
           if (deviceConfig != null) {
             const d = new Display(
               status.name,
-              config.display_name,
+              config.displayname,
               status.power,
               Input.getInput(status.input, this.inputs),
               status.blanked,
@@ -153,7 +153,7 @@ export class DataService {
           if (deviceConfig != null) {
             const a = new AudioDevice(
               status.name,
-              config.display_name,
+              config.displayname,
               status.power,
               Input.getInput(status.input, this.inputs),
               status.muted,
@@ -262,12 +262,19 @@ export class DataService {
         audioTypes.set(key, groupDevices);
       }
 
+      if (preset.screens === undefined) {
+        preset.screens = ["SCR1"];
+      }
+      const screens = APIService.room.config.devices.filter(oneDevice => preset.screens.some(one => one == oneDevice.name));
+
+
       const p = new Preset(
         preset.name,
         preset.icon,
         displays,
         audioDevices,
         inputs,
+        screens,
         preset.shareableDisplays,
         independentAudioDevices,
         audioTypes,

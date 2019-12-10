@@ -1,0 +1,212 @@
+$max-width: 95vw;
+$header-height: 8%;
+$master-width: 17vw;
+$button-width: 5vw;
+.container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    display: none;
+    .header {
+        height: $header-height;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .content {
+        height: 100% - (2 * $header-height);
+    }
+    &.show {
+        display: unset;
+        z-index: 2000;
+    }
+}
+
+.projectorscreens {
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    display: unset;
+    transition: 0.3s opacity ease-in-out;
+    &.loaded {
+        opacity: 1;
+    }
+}
+
+.text {
+    text-align: center;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 1.3em;
+    &.title {
+        color: white;
+        font-size: 1.7em;
+    }
+}
+
+.exit {
+    position: absolute;
+    top: 4vh;
+    left: 5vh;
+    mat-icon {
+        transform: scale(2.5);
+    }
+    span {
+        font-size: 1.5em;
+        margin-left: 2.5vw;
+    }
+    background-color: transparent;
+    color: white;
+}
+
+.items {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+// to space things correctly
+activity-button {
+    margin-left: 8px;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 0;
+    overflow: hidden;
+}
+
+.no-scroll {
+    // height: 100% - (1 * $header-height);
+    height: 100%;
+    width: 100%;
+    margin-bottom: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    .content {
+        width: 80%;
+        height: 100%;
+        .mixers {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            .sliders {
+                justify-content: space-evenly;
+            }
+        }
+    }
+    .master {
+        height: 88%;
+        display: flex;
+        align-items: center;
+        &::before {
+            right: $master-width + 4vw;
+        }
+    }
+}
+
+.slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 88%;
+    width: 17vw;
+    flex: 0 0 auto;
+    .label {
+        font-size: 1.1em;
+        word-wrap: break-word;
+    }
+    .slider {
+        height: 100%;
+    }
+}
+
+.master {
+    top: 0;
+    height: 88%;
+    width: $master-width;
+    display: flex;
+    align-items: center;
+    &::before {
+        position: absolute;
+        background: linear-gradient( 180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.7) 20%, rgba(0, 0, 0, 0.7) 80%, rgba(0, 0, 0, 0));
+        right: $master-width + 1vw;
+        top: 30%;
+        width: 0.4vw;
+        height: 50vh;
+        content: "";
+    }
+}
+
+.mixers {
+    height: 100%;
+    width: $max-width - $master-width - (2 * $button-width);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .sliders {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow: hidden;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+    .page-indicator {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-end;
+        height: 3vh;
+        width: 100%;
+        position: absolute;
+        bottom: 2.3vh;
+        .dot {
+            height: 0.5em;
+            width: 0.5em;
+            margin-right: 0.35em;
+            background-color: #8b8b8b;
+            border-radius: 50%;
+            display: inline-block;
+            &.selected {
+                background-color: #f6f6f6;
+            }
+        }
+    }
+}
+
+.button {
+    transform: scale(1.5);
+    margin-top: 30px;
+    margin-bottom: 30px;
+    background-color: inherit !important;
+    border: 1px #8b8b8b solid;
+}
+
+.hidden {
+    pointer-events: none;
+    opacity: 0;
+}
+
+.display {
+    color: white;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
+.icon {
+    transform: scale(1.5);
+}

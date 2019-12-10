@@ -38,6 +38,7 @@ import { MirrorModalComponent } from "../modals/mirrormodal/mirrormodal.componen
 import { MessageModalComponent } from "../modals/messagemodal/messagemodal.component";
 import { Action } from "./activity-button/activity-button.component";
 import { StreamModalComponent } from "app/modals/streammodal/streammodal.component";
+import { ProjectorComponent } from "./projector/projector.component";
 
 export const SHARE = "start_share";
 export const STOP_SHARE = "stop_share";
@@ -119,6 +120,9 @@ export class HomeComponent implements OnInit {
 
   @ViewChild(AudioComponent)
   public audio: AudioComponent;
+
+  @ViewChild(ProjectorComponent)
+  public screen: ProjectorComponent
 
   sharePreset: Preset;
   defaultPreset: Preset;
@@ -267,6 +271,7 @@ export class HomeComponent implements OnInit {
       displays,
       Array.from(new Set(audioDevices)),
       from.inputs,
+      from.screens,
       from.shareablePresets,
       from.independentAudioDevices,
       from.commands
@@ -278,7 +283,7 @@ export class HomeComponent implements OnInit {
       return new Promise<boolean>((resolve, reject) => {
         console.log("sharing from", from, "to", to);
 
-        // if you share, you can't go back to and old group anymore
+        // if you share, you can't go back to an old group anymore
         this.removeExtraInputs();
 
         const preset = this.buildSharePreset(from, to);

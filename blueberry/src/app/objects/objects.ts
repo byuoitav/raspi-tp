@@ -48,6 +48,27 @@ export class DeviceTypeConfiguration {
   _id: string;
   description: string;
   tags: string[];
+  commands: DeviceTypeCommandConfiguration[];
+}
+
+export class DeviceTypeCommandConfiguration {
+  _id: string;
+  description: string;
+  microservice: DeviceTypeCommandMicroserviceConfiguration;
+  endpoint: DeviceTypeCommandEndpointConfiguration;
+  priority: number;
+}
+
+export class DeviceTypeCommandMicroserviceConfiguration {
+  _id: string;
+  description: string;  
+  address: string;
+}
+
+export class DeviceTypeCommandEndpointConfiguration {
+  _id: string;
+  description: string;  
+  path: string;
 }
 
 export class RoleConfiguration {
@@ -107,6 +128,7 @@ export class PresetConfiguration {
   shareablePresets: string[];
   audioDevices: string[];
   inputs: string[];
+  screens: string[];
   independentAudioDevices: string[];
   commands: ConfigCommands;
 }
@@ -161,6 +183,7 @@ export class Preset {
   audioDevices: AudioDevice[] = [];
   inputs: Input[] = [];
   extraInputs: Input[] = [];
+  screens: DeviceConfiguration[];
 
   shareablePresets: string[];
   independentAudioDevices: AudioDevice[] = [];
@@ -173,6 +196,7 @@ export class Preset {
     displays: Display[],
     audioDevices: AudioDevice[],
     inputs: Input[],
+    screens: DeviceConfiguration[],
     shareablePresets: string[],
     independentAudioDevices: AudioDevice[],
     commands: ConfigCommands
@@ -182,6 +206,7 @@ export class Preset {
     this.displays = displays;
     this.audioDevices = audioDevices;
     this.inputs = inputs;
+    this.screens = screens;
     this.shareablePresets = shareablePresets;
     this.independentAudioDevices = independentAudioDevices;
     this.commands = commands;

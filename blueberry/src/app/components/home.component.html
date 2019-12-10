@@ -1,4 +1,5 @@
 <audiocontrol #audio class="audio"></audiocontrol>
+<app-projector #screen class="audio"></app-projector>
 
 <div class="buttons top">
   <button
@@ -43,6 +44,7 @@
 </div>
 
 <div class="buttons bottom">
+  
   <ng-container
     *ngIf="
       data?.panel?.features.includes('share') &&
@@ -59,9 +61,9 @@
         showShareModal(); command.buttonPress('long press open share modal')
       "
     >
+    
       <mat-icon>screen_share</mat-icon>
     </button>
-
     <!-- TODO test unshare event -->
     <button
       mat-fab
@@ -76,6 +78,21 @@
       "
     >
       <mat-icon>stop_screen_share</mat-icon>
+    </button>
+  </ng-container>
+  <ng-container
+  *ngIf="wheel?.preset?.screens?.length > 0"
+  >
+    <button
+      mat-fab
+      class="dta button"
+      (click)="screen.show(defaultPreset); command.buttonPress('open projector modal')"
+      (press)="
+        screen.show(defaultPreset);
+        command.buttonPress('long press open projector modal')
+      "
+    >
+    <mat-icon>unfold_more</mat-icon>
     </button>
   </ng-container>
 </div>
