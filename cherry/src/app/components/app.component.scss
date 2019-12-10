@@ -58,14 +58,15 @@ $buttonXOffset: .55rem;
         width: 100%;
     }
     .logo {
-        height: 70vh;
-        width: 70vh;
+        height: 60vh;
+        width: 60vh;
         display: flex;
         justify-content: center;
         align-items: center;
     }
     .text {
         margin-top: 3%;
+        margin-bottom: 10%;
         font-size: 150%;
         &.smaller {
             transform: scale(.75);
@@ -106,9 +107,10 @@ $buttonXOffset: .55rem;
 
 .unlock-code {
     position: absolute;
-    left: 5%;
     top: 80%;
-    font-size: 25px;
+    font-size: 20px;
     display: grid;
     grid-template-rows: auto, auto;
+    color: white;
+    text-align: center;
 }

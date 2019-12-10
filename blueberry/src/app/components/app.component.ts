@@ -37,7 +37,7 @@ export class AppComponent {
   @ViewChild(HomeComponent)
   public home: HomeComponent;
   public unlocking = false;
-
+  public controlKey: string;
   public location = window.location;
 
   @ViewChild(AudioComponent)
@@ -48,8 +48,16 @@ export class AppComponent {
     public socket: SocketService,
     public command: CommandService,
     private dialog: MatDialog,
-    private es: ErrorService
-  ) {}
+    private es: ErrorService,
+    private data: DataService,
+  ) {
+    this.data.loaded.subscribe(() => {
+      this.getCode();
+      setInterval( () => {
+        this.getCode();
+      }, 300000);
+    });
+  }
 
   public unlock() {
     if (this.home.wheel == null) {
@@ -66,6 +74,16 @@ export class AppComponent {
         setTimeout(() => (this.unlocking = false), 1000);
       }
     });
+  }
+
+  public getCode() {
+    const preset = this.data.panel.preset.name;
+    this.api.getControlKey(preset).subscribe(data => {
+      this.controlKey = data;
+    }, err => {
+      console.warn("Unable to get Control Key: " + err);
+    });
+
   }
 
   showManagement = (): boolean => {

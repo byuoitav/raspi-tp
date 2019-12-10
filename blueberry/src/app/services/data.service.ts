@@ -40,7 +40,7 @@ export class DataService {
     this.api.loaded.subscribe(() => {
       this.createInputs();
       this.createOutputs();
-      this.createScreens();
+      // this.createScreens();
 
       this.createPresets();
       this.createPanels();
@@ -89,13 +89,13 @@ export class DataService {
     console.info("Inputs", this.inputs);
   }
 
-  private createScreens() {
-    for (const preset of APIService.room.uiconfig.presets) {
-      const screens = preset.screens
+  // private createScreens() {
+  //   for (const preset of APIService.room.uiconfig.presets) {
+  //     const screens = preset.screens
 
 
-    }
-  }
+  //   }
+  // }
 
   private createOutputs() {
     // create displays
@@ -195,6 +195,9 @@ export class DataService {
         this.audioDevices
       );
 
+      if (preset.screens === undefined) {
+        preset.screens = ["SCR1"];
+      }
       const screens = APIService.room.config.devices.filter(oneDevice => preset.screens.some(one => one == oneDevice.name));
       console.info("Screens", screens)
 

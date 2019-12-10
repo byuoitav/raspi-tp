@@ -54,7 +54,7 @@ export class AppComponent {
   }
 
   public getCode() {
-    const preset = this.data.presets[0].name;
+    const preset = this.data.panel.preset.name;
     this.api.getControlKey(preset).subscribe(data => {
       this.controlKey = data;
     }, err => {

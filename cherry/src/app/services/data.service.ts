@@ -261,7 +261,7 @@ export class DataService {
         const groupDevices = Device.filterDevices(group, this.audioDevices);
         audioTypes.set(key, groupDevices);
       }
-
+      
       if (preset.screens === undefined) {
         preset.screens = ["SCR1"];
       }

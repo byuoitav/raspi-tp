@@ -27,18 +27,21 @@
             &.unlock {
                 &::after {
                     content: var(--lock-message);
-                    color: var(--lock-message-color);
+                    color: var(--lock-message-color);    
                 }
+                margin-top: 0%;
+                margin-bottom: 10%;
             }
         }
         .logo {
-            height: 70vh;
-            width: 70vh;
+            height:60vh;
+            width: 60vh;
             display: flex;
             justify-content: center;
             align-items: center;
             pointer-events: none;
             filter: invert(5%);
+            margin-bottom: 4%;
         }
     }
 }
@@ -219,4 +222,14 @@
 .mpb {
     position: fixed;
     margin-bottom: 10px;
+}
+
+.unlock-code {
+    position: absolute;
+    top: 80%;
+    font-size: 20px;
+    display: grid;
+    grid-template-rows: auto, auto;
+    color: white;
+    text-align: center;
 }

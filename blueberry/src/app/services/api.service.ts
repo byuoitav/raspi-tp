@@ -296,6 +296,12 @@ export class APIService {
       .subscribe();
   }
 
+  public getControlKey(preset: string): Observable<string> {
+    return this.http
+      .get(APIService.localurl + ":8888/code/" + preset)
+      .map(response => response.json());
+  }
+
   public help(type: string): Observable<Object> {
     const body = { building: APIService.building, room: APIService.roomName };
 
