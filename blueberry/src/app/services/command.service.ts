@@ -648,13 +648,14 @@ export class CommandService {
     }
     
     const path = command.endpoint.path.replace(":address", device.address);
-    path.replace("localhost", window.location.hostname);
+    let fullpath = command.microservice.address + path;
+    fullpath = fullpath.replace("localhost", window.location.hostname);
 
 
     const projectorUpReq = new CommandRequest(
       new Request({
         method: "GET",
-        url: command.microservice.address + path,
+        url: fullpath,
       })
     );
 
@@ -677,12 +678,13 @@ export class CommandService {
       }
       
       const path = command.endpoint.path.replace(":address", device.address);
-      path.replace("localhost", window.location.hostname);
+      let fullpath = command.microservice.address + path;
+      fullpath = fullpath.replace("localhost", window.location.hostname);
   
       const projectorUpReq = new CommandRequest(
         new Request({
           method: "GET",
-          url: command.microservice.address + path,
+          url: fullpath,
         })
       );
   
@@ -706,13 +708,14 @@ export class CommandService {
       }
 
       const path = command.endpoint.path.replace(":address", device.address);
-      path.replace("localhost", window.location.hostname);
+      let fullpath = command.microservice.address + path;
+      fullpath = fullpath.replace("localhost", window.location.hostname);
 
   
       const projectorUpReq = new CommandRequest(
         new Request({
           method: "GET",
-          url: command.microservice.address + path,
+          url: fullpath,
         })
       );
   
