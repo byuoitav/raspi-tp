@@ -648,6 +648,8 @@ export class CommandService {
     }
     
     const path = command.endpoint.path.replace(":address", device.address);
+    path.replace("localhost", window.location.hostname);
+
 
     const projectorUpReq = new CommandRequest(
       new Request({
@@ -675,6 +677,7 @@ export class CommandService {
       }
       
       const path = command.endpoint.path.replace(":address", device.address);
+      path.replace("localhost", window.location.hostname);
   
       const projectorUpReq = new CommandRequest(
         new Request({
@@ -703,6 +706,8 @@ export class CommandService {
       }
 
       const path = command.endpoint.path.replace(":address", device.address);
+      path.replace("localhost", window.location.hostname);
+
   
       const projectorUpReq = new CommandRequest(
         new Request({
