@@ -185,9 +185,9 @@ export class DataService {
         this.audioDevices
       );
 
-      if (preset.screens === undefined) {
-        preset.screens = ["SCR1"];
-      }
+      // if (preset.screens === undefined) {
+      //   preset.screens = ["SCR1"];
+      // }
       const screens = APIService.room.config.devices.filter(oneDevice => preset.screens.some(one => one == oneDevice.name));
       console.info("Screens", screens)
 
