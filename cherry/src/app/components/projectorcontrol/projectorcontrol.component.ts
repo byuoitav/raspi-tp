@@ -82,7 +82,7 @@ export class ProjectorControlComponent implements OnInit {
   };
 
   projectorUp(screen: DeviceConfiguration) {
-    this.command.projectorUp(screen.address).subscribe(success => {
+    this.command.projectorUp(screen).subscribe(success => {
       if (success) {
 
       } else {
@@ -92,7 +92,7 @@ export class ProjectorControlComponent implements OnInit {
   }
 
   projectorDown(screen: DeviceConfiguration) {
-    this.command.projectorDown(screen.address).subscribe(success => {
+    this.command.projectorDown(screen).subscribe(success => {
       if (success) {
 
       } else {
@@ -102,7 +102,7 @@ export class ProjectorControlComponent implements OnInit {
   }
 
   projectorStop(screen: DeviceConfiguration) {
-    this.command.projectorStop(screen.address).subscribe(success => {
+    this.command.projectorStop(screen).subscribe(success => {
       if (success) {
 
       } else {

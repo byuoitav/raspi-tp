@@ -47,6 +47,27 @@ export class DeviceTypeConfiguration {
   _id: string;
   description: string;
   tags: string[];
+  commands: DeviceTypeCommandConfiguration[]
+}
+
+export class DeviceTypeCommandConfiguration {
+  _id: string;
+  description: string;
+  microservice: DeviceTypeCommandMicroserviceConfiguration;
+  endpoint: DeviceTypeCommandEndpointConfiguration;
+  priority: number;
+}
+
+export class DeviceTypeCommandMicroserviceConfiguration {
+  _id: string;
+  description: string;  
+  address: string;
+}
+
+export class DeviceTypeCommandEndpointConfiguration {
+  _id: string;
+  description: string;  
+  path: string;
 }
 
 export class RoleConfiguration {

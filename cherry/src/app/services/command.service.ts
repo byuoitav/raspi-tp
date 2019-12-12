@@ -13,7 +13,7 @@ import { APIService } from "./api.service";
 import { DataService } from "./data.service";
 import { Event, BasicDeviceInfo, BasicRoomInfo } from "./socket.service";
 import { Input, Display, AudioDevice } from "../objects/status.objects";
-import { Preset, AudioConfig, ConfigCommand } from "../objects/objects";
+import { Preset, AudioConfig, ConfigCommand, DeviceConfiguration } from "../objects/objects";
 
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/timeout";
@@ -914,95 +914,84 @@ export class CommandService {
     this.api.sendEvent(event);
   }
 
-  public projectorUp(address: string): EventEmitter<boolean> {
+  public projectorUp(device: DeviceConfiguration): EventEmitter<boolean> {
     const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
-    const projectorUpReq1 = new CommandRequest(
-      new Request({
-        method: "GET",
-        url: "http://localhost:8028/" + address + "/activate/2",
-      })
-    );
-    const projectorUpReq2 = new CommandRequest(
-      new Request({
-        method: "GET",
-        url: "http://localhost:8028/" + address + "/deactivate/1",
-      })
-    );
-    const projectorUpReq3 = new CommandRequest(
-      new Request({
-        method: "GET",
-        url: "http://localhost:8028/" + address + "/deactivate/2",
-      })
-    );
-    const requests: CommandRequest[] = [projectorUpReq1, projectorUpReq2, projectorUpReq3];
+    const command = device.type.commands.find(one => one._id == "ScreenUp");
 
-    this.executeRequests(requests, 20 * 1000).subscribe(success => {
+    if (!command) {
+      ret.emit(false);
+      return ret;
+    }
+
+    const path = command.endpoint.path.replace(":address", device.address);
+    let fullpath = command.microservice.address + path;
+    fullpath = fullpath.replace("localhost", window.location.hostname);
+
+
+    const projectorUpReq = new CommandRequest(
+      new Request({
+        method: "GET",
+        url: fullpath,
+      })
+    );
+
+    this.executeRequest(projectorUpReq, 20 * 1000).subscribe(success => {
       ret.emit(success);
     });
 
     return ret;
   }
 
-  public projectorStop(address: string): EventEmitter<boolean> {
+  public projectorStop(device: DeviceConfiguration): EventEmitter<boolean> {
     const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
-    const projectorStopReq1 = new CommandRequest(
+    const command = device.type.commands.find(one => one._id == "ScreenStop");
+
+    if (!command) {
+      ret.emit(false);
+      return ret;
+    }
+
+    const path = command.endpoint.path.replace(":address", device.address);
+    let fullpath = command.microservice.address + path;
+    fullpath = fullpath.replace("localhost", window.location.hostname);
+
+
+    const projectorStopReq = new CommandRequest(
       new Request({
         method: "GET",
-        url: "http://localhost:8028/" + address + "/activate/1",
-      })
-    );
-    const projectorStopReq2 = new CommandRequest(
-      new Request({
-        method: "GET",
-        url: "http://localhost:8028/" + address + "/activate/2",
+        url: fullpath,
       })
     );
 
-    const projectorStopReq3 = new CommandRequest(
-      new Request({
-        method: "GET",
-        url: "http://localhost:8028/" + address + "/deactivate/1",
-      })
-    );
-    const projectorStopReq4 = new CommandRequest(
-      new Request({
-        method: "GET",
-        url: "http://localhost:8028/" + address + "/deactivate/2",
-      })
-    );
-    const requests: CommandRequest[] = [projectorStopReq1, projectorStopReq2, projectorStopReq3, projectorStopReq4];
-
-    this.executeRequests(requests, 20 * 1000).subscribe(success => {
+    this.executeRequest(projectorStopReq, 20 * 1000).subscribe(success => {
       ret.emit(success);
     });
 
     return ret;
   }
 
-  public projectorDown(address: string): EventEmitter<boolean> {
+  public projectorDown(device: DeviceConfiguration): EventEmitter<boolean> {
     const ret: EventEmitter<boolean> = new EventEmitter<boolean>();
-    const projectorDownReq1 = new CommandRequest(
+    const command = device.type.commands.find(one => one._id == "ScreenDown");
+
+    if (!command) {
+      ret.emit(false);
+      return ret;
+    }
+
+    const path = command.endpoint.path.replace(":address", device.address);
+    let fullpath = command.microservice.address + path;
+    fullpath = fullpath.replace("localhost", window.location.hostname);
+
+
+    const projectorDownReq = new CommandRequest(
       new Request({
         method: "GET",
-        url: "http://localhost:8028/" + address + "/activate/1",
+        url: fullpath,
       })
     );
 
-    const projectorDownReq2 = new CommandRequest(
-      new Request({
-        method: "GET",
-        url: "http://localhost:8028/" + address + "/deactivate/1",
-      })
-    );
-    const projectorDownReq3 = new CommandRequest(
-      new Request({
-        method: "GET",
-        url: "http://localhost:8028/" + address + "/deactivate/2",
-      })
-    );
-    const requests: CommandRequest[] = [projectorDownReq1, projectorDownReq2, projectorDownReq3];
-
-    this.executeRequests(requests, 20 * 1000).subscribe(success => {
+    this.executeRequest(projectorDownReq, 20 * 1000).subscribe(success => {
       ret.emit(success);
     });
 
