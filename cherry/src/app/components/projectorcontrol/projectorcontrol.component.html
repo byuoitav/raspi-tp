@@ -6,7 +6,7 @@
                     <div class="mixers">
                         <div class="sliders">
                             <div *ngFor="let s of devices; let i = index" [id]="'device' + i" class="slider-container">
-                                <span class="display">{{s.name}}</span>
+                                <span class="display">{{s.display_name}}</span>
                                 <button mat-raised-button class="button" color="primary" (click)="projectorUp(s)">
                   <mat-icon class="icon">keyboard_arrow_up</mat-icon>
                   </button>
