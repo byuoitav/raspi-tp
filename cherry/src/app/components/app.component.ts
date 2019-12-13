@@ -2,7 +2,6 @@ import { Component, ViewEncapsulation, ViewChild } from "@angular/core";
 import { MatTabChangeEvent, MatDialog } from "@angular/material";
 import { trigger, style, animate, transition } from "@angular/animations";
 import { Http } from "@angular/http";
-
 import { DataService } from "../services/data.service";
 import { CommandService } from "../services/command.service";
 import { GraphService } from "../services/graph.service";
@@ -33,6 +32,7 @@ export class AppComponent {
   public unlocking = false;
   public progressMode: string = QUERY;
   public controlKey: string;
+  public roomControlUrl: string;
 
   public selectedTabIndex: number;
 
@@ -56,7 +56,8 @@ export class AppComponent {
   public getCode() {
     const preset = this.data.panel.preset.name;
     this.api.getControlKey(preset).subscribe(data => {
-      this.controlKey = data;
+      this.controlKey = data["controlKey"];
+      this.roomControlUrl = data["url"];
     }, err => {
       console.warn("Unable to get Control Key: " + err);
     });

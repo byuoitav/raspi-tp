@@ -38,8 +38,11 @@ func GetControlKey(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
+	resp := make(map[string]string)
+	resp["controlKey"] = key
+	resp["url"] = os.Getenv("ROOM_CONTROL_URL")
 
-	return c.JSON(http.StatusOK, key)
+	return c.JSON(http.StatusOK, resp)
 }
 
 func GetDeviceInfo(context echo.Context) error {

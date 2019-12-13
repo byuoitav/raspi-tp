@@ -38,6 +38,7 @@ export class AppComponent {
   public home: HomeComponent;
   public unlocking = false;
   public controlKey: string;
+  public roomControlUrl: string;
   public location = window.location;
 
   @ViewChild(AudioComponent)
@@ -79,7 +80,8 @@ export class AppComponent {
   public getCode() {
     const preset = this.data.panel.preset.name;
     this.api.getControlKey(preset).subscribe(data => {
-      this.controlKey = data;
+      this.controlKey = data["controlKey"];
+      this.roomControlUrl = data["url"];
     }, err => {
       console.warn("Unable to get Control Key: " + err);
     });

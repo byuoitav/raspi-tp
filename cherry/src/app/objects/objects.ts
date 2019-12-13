@@ -24,7 +24,7 @@ export class RoomConfiguration {
 export class DeviceConfiguration {
   _id: string;
   name: string;
-  displayname: string;
+  display_name: string;
   address: string;
 
   @Type(() => DeviceTypeConfiguration)
