@@ -265,8 +265,8 @@ export class DataService {
       
       // if (preset.screens === undefined) {
       //   preset.screens = ["SCR1"];
-      // }
-      const screens = preset.screens === undefined ?
+      // }      
+      const screens = preset.screens === undefined || preset.screens === null ?
         [] :
         APIService.room.config.devices.filter(oneDevice => preset.screens.some(one => one == oneDevice.name));
 
