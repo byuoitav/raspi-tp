@@ -9,6 +9,7 @@
         "HUB_ADDRESS",
         "ROOM_SYSTEM",
         "SYSTEM_ID",
-        "UI_CONFIGURATION_ADDRESS"
+        "UI_CONFIGURATION_ADDRESS",
+        "ROOM_CONTROL_URL"
     ]
 }

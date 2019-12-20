@@ -124,6 +124,8 @@ export class HomeComponent implements OnInit {
   @ViewChild(ProjectorComponent)
   public screen: ProjectorComponent
 
+  public controlKey: string;
+  public roomControlUrl: string;
   sharePreset: Preset;
   defaultPreset: Preset;
 
@@ -142,6 +144,7 @@ export class HomeComponent implements OnInit {
     this.data.loaded.subscribe(() => {
       this.updateFromEvents();
       this.setupInputFunctions();
+      this.getCode();
 
       this.updateHelp();
     });
@@ -895,5 +898,16 @@ export class HomeComponent implements OnInit {
         unmirror: this.unmirror
       }
     });
+  }
+
+  public getCode() {
+    const preset = this.data.panel.preset.name;
+    this.api.getControlKey(preset).subscribe(data => {
+      this.controlKey = data["controlKey"];
+      this.roomControlUrl = data["url"];
+    }, err => {
+      console.warn("Unable to get Control Key: " + err);
+    });
+
   }
 }

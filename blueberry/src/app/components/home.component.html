@@ -29,6 +29,17 @@
   >
     <mat-icon>help</mat-icon>
   </button>
+
+  <div *ngIf="controlKey" class="control-key-info">
+    <div>
+      <!-- rooms.byu.edu -->
+      {{roomControlUrl}}
+    </div>
+    <div>
+      Key: {{controlKey}}
+    </div>
+  </div>
+
 </div>
 
 <div *ngIf="data.panel?.render">

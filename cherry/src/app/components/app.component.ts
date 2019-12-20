@@ -31,8 +31,6 @@ export class AppComponent {
   public loaded: boolean;
   public unlocking = false;
   public progressMode: string = QUERY;
-  public controlKey: string;
-  public roomControlUrl: string;
 
   public selectedTabIndex: number;
 
@@ -45,23 +43,8 @@ export class AppComponent {
   ) {
     this.loaded = false;
     this.data.loaded.subscribe(() => {
-      this.getCode();
-      setInterval( () => {
-        this.getCode();
-      }, 300000);
       this.loaded = true;
     });
-  }
-
-  public getCode() {
-    const preset = this.data.panel.preset.name;
-    this.api.getControlKey(preset).subscribe(data => {
-      this.controlKey = data["controlKey"];
-      this.roomControlUrl = data["url"];
-    }, err => {
-      console.warn("Unable to get Control Key: " + err);
-    });
-
   }
 
   public isPoweredOff(): boolean {

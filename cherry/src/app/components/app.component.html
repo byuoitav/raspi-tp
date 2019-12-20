@@ -11,9 +11,9 @@
 
                 <!-- unlock text -->
                 <span class="text">Touch anywhere to start</span>
-                <div *ngIf="controlKey" class="unlock-code">
-                    <div>{{roomControlUrl}}</div>
-                    <div> control key: {{controlKey}} </div>
+                <div *ngIf="data.controlKey" class="unlock-code">
+                    <div>{{data.roomControlUrl}}</div>
+                    <div> control key: {{data.controlKey}} </div>
                 </div>
             </ng-container>
 

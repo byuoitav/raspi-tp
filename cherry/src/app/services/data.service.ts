@@ -35,6 +35,8 @@ export class DataService {
   public audioConfig: Map<Display, AudioConfig> = new Map();
   public presets: Preset[] = [];
   public panels: Panel[] = [];
+  public roomControlUrl: string;
+  public controlKey: string;
 
   public dividerSensor: DeviceConfiguration;
 
@@ -52,6 +54,10 @@ export class DataService {
 
       this.createPresets();
       this.createPanels();
+      this.getCode()
+      setInterval(() => {
+        this.getCode();
+      }, 30000);
 
       // set divider sensor
       this.dividerSensor = APIService.room.config.devices.find(d =>
@@ -508,5 +514,16 @@ export class DataService {
         return device;
       }
     }
+  }
+
+  public getCode() {
+    this.api.getControlKey(this.panel.preset.name).subscribe(data => {
+      
+      this.controlKey = data["controlKey"];
+      this.roomControlUrl = data["url"];
+    }, err => {
+      console.warn("Unable to get Control Key: " + err);
+    });
+
   }
 }
