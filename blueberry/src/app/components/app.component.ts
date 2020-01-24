@@ -5,7 +5,7 @@ import {
   ElementRef,
   ComponentRef
 } from "@angular/core";
-import { MatDialog } from "@angular/material";
+import { MatDialog, MatDialogRef } from "@angular/material";
 
 import { APIService } from "../services/api.service";
 import { DataService } from "../services/data.service";
@@ -43,6 +43,7 @@ export class AppComponent {
   public controlKey: string;
   public roomControlUrl: string;
   public location = window.location;
+  public mobileRef: MatDialogRef<MobileControlModal>
 
   @ViewChild(AudioComponent)
   public audio: AudioComponent;
@@ -69,6 +70,10 @@ export class AppComponent {
   public unlock() {
     if (this.home.wheel == null) {
       return;
+    }
+
+    if (this.mobileRef != null) {
+      this.dialog.closeAll();
     }
 
     this.unlocking = true;
@@ -128,7 +133,7 @@ export class AppComponent {
 
   public showMobileControl() {
     console.log("this is audio: ", this.data);
-    const ref = this.dialog.open(MobileControlModal, {
+    this.mobileRef = this.dialog.open(MobileControlModal, {
       width: "70vw",
       height: "52.5vw"
     });

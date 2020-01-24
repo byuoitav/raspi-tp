@@ -30,7 +30,7 @@
     "json2typescript": "^1.0.6",
     "material-design-icons": "^3.0.1",
     "ngx-qrcode2": "0.0.5",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "rxjs": "^5.5.6",
     "serializer.ts": "0.0.12",
     "zone.js": "^0.8.19"

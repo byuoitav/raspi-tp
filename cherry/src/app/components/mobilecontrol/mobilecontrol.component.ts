@@ -12,6 +12,7 @@ import { DataService } from 'app/services/data.service';
 export class MobileControlComponent implements OnInit {
   public value: string;
   public elementType: 'url';
+  public _show = false;
 
   constructor(
     public ref: MatDialogRef<MobileControlComponent>,
@@ -25,10 +26,16 @@ export class MobileControlComponent implements OnInit {
 
   ngOnInit() {
     this.ref.disableClose = true;    
+    this._show = true;
   }
 
   public cancel() {
     this.command.buttonPress("exit mobile control")
+    this._show = false;
     this.ref.close();
+  }
+
+  public isShowing() {
+    return this._show;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation, ViewChild } from "@angular/core";
-import { MatTabChangeEvent, MatDialog } from "@angular/material";
+import { MatTabChangeEvent, MatDialog, MatDialogRef } from "@angular/material";
 import { trigger, style, animate, transition } from "@angular/animations";
 import { Http } from "@angular/http";
 import { DataService } from "../services/data.service";
@@ -38,6 +38,7 @@ export class AppComponent {
   public loaded: boolean;
   public unlocking = false;
   public progressMode: string = QUERY;
+  public mobileRef: MatDialogRef<MobileControlComponent>;
 
   public selectedTabIndex: number;
 
@@ -65,12 +66,14 @@ export class AppComponent {
       return false;
     }
 
-    if (this.isPoweredOff) {
+    if (this.isPoweredOff()) {
       return true;
     }
+    return false;
   }
 
   public isPoweredOff(): boolean {
+
     if (!this.loaded) {
       return true;
     }
@@ -81,6 +84,9 @@ export class AppComponent {
   public unlock() {
     this.unlocking = true;
     this.progressMode = QUERY;
+    if (this.mobileRef != null) {
+      this.dialog.closeAll();
+    }
 
     this.command.powerOnDefault(this.data.panel.preset).subscribe(success => {
       if (!success) {
@@ -144,7 +150,7 @@ export class AppComponent {
   }
 
   public openMobileControlDialog() {
-    const dialogRef = this.dialog.open(MobileControlComponent, {
+    this.mobileRef = this.dialog.open(MobileControlComponent, {
       width: "70vw",
       height: "52.5vw"
     });
