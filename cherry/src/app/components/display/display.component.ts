@@ -9,6 +9,7 @@ import { Preset } from "../../objects/objects";
 import { Display, AudioDevice, Input } from "../../objects/status.objects";
 import { StreamModalComponent } from "../../dialogs/streammodal/streammodal.component";
 import { isUndefined } from "util";
+import { MobileControlComponent } from "../mobilecontrol/mobilecontrol.component";
 
 @Component({
   selector: "display",
@@ -21,7 +22,7 @@ export class DisplayComponent {
   selectedDisplays: Set<Display> = new Set();
 
   constructor(
-    private data: DataService,
+    public data: DataService,
     public command: CommandService,
     private dialog: MatDialog
   ) {
@@ -153,5 +154,12 @@ export class DisplayComponent {
     });
 
     return displays;
+  }
+
+  public openMobileControlDialog() {
+    const dialogRef = this.dialog.open(MobileControlComponent, {
+      width: "70vw",
+      disableClose: true
+    });
   }
 }

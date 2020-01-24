@@ -1,19 +1,61 @@
+<audiocontrol #audio class="audio"></audiocontrol>
+<lock-screen-screen-control #screen class="audio"></lock-screen-screen-control>
+<lock-screen-audio #lockaudio class="audio"></lock-screen-audio>
+
+
 <div class="base mat-app-background">
     <!-- management pattern -->
-    <management [enabled]="isPoweredOff()"></management>
+    <management [enabled]="showManagement()"></management>
 
     <ng-container *ngIf="loaded; else loading">
-        <div *ngIf="isPoweredOff(); else home" class="lock" (click)="unlock(); command.buttonPress('power on')" (press)="unlock(); command.buttonPress('long press power on')">
+        <div *ngIf="isPoweredOff(); else home" class="lock">
             <ng-container *ngIf="!unlocking; else poweringOn">
                 <!-- byu logo -->
                 <object type="image/svg+xml" data="./assets/byu_medallion_white.svg" class="logo">
                 </object>
 
-                <!-- unlock text -->
-                <span class="text">Touch anywhere to start</span>
-                <div *ngIf="data.controlKey" class="unlock-code">
-                    <div>{{data.roomControlUrl}}</div>
-                    <div> control key: {{data.controlKey}} </div>
+                <!-- unlock button -->
+                <div class="text">
+                    <button mat-stroked-button
+                    class="lock-screen-button start-button"
+                    (click)="unlock(); command.buttonPress('power on')" 
+                    (press)="unlock(); command.buttonPress('long press power on')">
+                    Start
+                    </button>
+                </div>
+
+                <!-- screen/audio/mobile control buttons -->
+                <div class="optional-buttons">
+                    <!-- Screen Control -->
+                    <ng-container *ngIf="data?.panel?.preset?.screens?.length > 0">
+                        <button mat-stroked-button class="lock-screen-button screen-button"
+                        (click)="screen.show(data?.panel?.preset); command.buttonPress('open screen control modal')"
+                        (press)="screen.show(data?.panel?.preset); command.buttonPress('long press open screen control modal')">
+                            <mat-icon class="screen-control-icon">unfold_more</mat-icon>
+                            <div class="button-text">Screen Control</div>
+                        </button>
+                    </ng-container>
+
+                    <!-- Mobile Control -->
+                    <ng-container *ngIf="data.controlKey">
+                        <button mat-stroked-button
+                        class="lock-screen-button mobile-control"
+                        (click)="openMobileControlDialog(); command.buttonPress('open mobile control modal')"
+                        (press)="openMobileControlDialog(); command.buttonPress('long press open mobile control modal')">
+                        <mat-icon class="screen-control-icon">phone_iphone</mat-icon>
+                        <div class="button-text">Key: {{data.controlKey}}</div>
+                        </button>
+                    </ng-container>
+    
+                    <!-- Audio Control -->
+                    <ng-container *ngIf="data?.panel?.preset?.audioDevices?.length > 0">
+                        <button mat-stroked-button class="lock-screen-button audio-button"
+                        (click)="lockaudio.show(data?.panel?.preset); command.buttonPress('open audio control modal')"
+                        (press)="lockaudio.show(data?.panel?.preset); command.buttonPress('long press open audio control modal')">
+                            <mat-icon class="rotate-90">tune</mat-icon>
+                            <div class="button-text">Audio Control</div>
+                        </button>
+                    </ng-container>
                 </div>
             </ng-container>
 
@@ -29,8 +71,8 @@
     <ng-template #home>
         <ng-container *ngIf="data?.panel?.preset?.displays?.length > 0">
             <button mat-raised-button color="warn" class="power" (click)="powerOff(); command.buttonPress('power off')" (press)="powerOff(); command.buttonPress('long press power off')">
-        Power Off
-      </button>
+                Power Off
+            </button>
         </ng-container>
 
         <div class="secondary-theme">
@@ -59,7 +101,7 @@
                 </mat-tab>
 
                 <ng-container *ngIf="data?.panel?.preset?.screens?.length > 0">
-                    <mat-tab label="Projector Control">
+                    <mat-tab label="Screen Control">
                         <!-- projector control -->
                         <projector-control [@delay] [preset]="data?.panel?.preset">
                         </projector-control>

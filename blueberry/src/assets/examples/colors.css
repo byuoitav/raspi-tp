@@ -53,6 +53,6 @@
     --share-display-badge-icon-color: white;
 
     /* control message on lock screen */
-    --lock-message: "Touch anywhere to start";
+    --lock-message: "Touch here to start";
     --lock-message-color: white;
 }

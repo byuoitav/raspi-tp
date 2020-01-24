@@ -54,7 +54,7 @@ export class DataService {
 
       this.createPresets();
       this.createPanels();
-      this.getCode()
+      this.getCode();
       setInterval(() => {
         this.getCode();
       }, 30000);

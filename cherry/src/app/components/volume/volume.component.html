@@ -1,6 +1,6 @@
 <div class="volume">
     <!-- volume slider -->
-    <mat-slider #slider class="slider" color="primary" (change)="levelChange.emit($event.value); closeThumb()" [max]="100" [min]="0" [step]="5" [thumb-label]="true" [vertical]="true" [value]="mute ? beforeMuteLevel : level">
+    <mat-slider #slider class="slider"  (change)="levelChange.emit($event.value); closeThumb()" [max]="100" [min]="0" [step]="5" [thumb-label]="true" [vertical]="true" [value]="mute ? beforeMuteLevel : level">
     </mat-slider>
 
     <!-- mute button -->

@@ -27,6 +27,9 @@ import {
 import { HomeComponent } from "./home.component";
 import { AudioComponent } from "./audio/audio.component";
 import { ErrorService, PowerOn } from "app/services/error.service";
+import { MobileControlModal } from "../modals/mobilecontrolmodal/mobilecontrolmodal.component";
+import { ProjectorComponent } from "./projector/projector.component";
+
 
 @Component({
   selector: "app-root",
@@ -43,6 +46,9 @@ export class AppComponent {
 
   @ViewChild(AudioComponent)
   public audio: AudioComponent;
+
+  @ViewChild(ProjectorComponent)
+  public screen: ProjectorComponent
 
   constructor(
     private api: APIService,
@@ -97,6 +103,14 @@ export class AppComponent {
       return false;
     }
 
+    if (this.audio.isShowing()) {
+      return false;
+    }
+
+    if (this.screen.isShowing()) {
+      return false;
+    }
+
     if (!this.home) {
       return true;
     }
@@ -111,4 +125,12 @@ export class AppComponent {
 
     return false;
   };
+
+  public showMobileControl() {
+    console.log("this is audio: ", this.data);
+    const ref = this.dialog.open(MobileControlModal, {
+      width: "70vw",
+      height: "52.5vw"
+    });
+  }
 }

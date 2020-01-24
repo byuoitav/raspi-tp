@@ -5,11 +5,11 @@ import { Preset, DeviceConfiguration } from 'app/objects/objects';
 
 
 @Component({
-  selector: 'app-projector',
-  templateUrl: './projector.component.html',
-  styleUrls: ['./projector.component.scss']
+  selector: 'lock-screen-screen-control',
+  templateUrl: './lockscreenscreencontrol.component.html',
+  styleUrls: ['./lockscreenscreencontrol.component.scss']
 })
-export class ProjectorComponent implements OnInit {
+export class LockScreenScreenControlComponent implements OnInit {
   preset: Preset;
   _show: boolean;
   devices: DeviceConfiguration[] = [];
@@ -126,3 +126,4 @@ export class ProjectorComponent implements OnInit {
     });
   }
 }
+

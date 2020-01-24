@@ -25,17 +25,17 @@
                 transform: scale(0.75);
             }
             &.unlock {
-                &::after {
-                    content: var(--lock-message);
-                    color: var(--lock-message-color);    
-                }
+                // &::after {
+                //     content: var(--lock-message);
+                //     color: var(--lock-message-color);    
+                // }
                 margin-top: 0%;
                 margin-bottom: 10%;
             }
         }
         .logo {
-            height:60vh;
-            width: 60vh;
+            height:40vh;
+            width: 40vh;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -224,12 +224,50 @@
     margin-bottom: 10px;
 }
 
-.unlock-code {
+.optional-buttons {
     position: absolute;
-    top: 80%;
-    font-size: 20px;
-    display: grid;
-    grid-template-rows: auto, auto;
-    color: white;
-    text-align: center;
+    top: 79%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
 }
+
+.lock-screen-button {
+    color: white;
+    min-height: 58px;
+    width: 130px;
+    // background-color: var(--help-color);
+    background-color: unset;
+    border-color: #666666;
+    border-style: solid;
+    border-width: 1px;
+    transform: scale(1.5);
+    margin-right: 60px;
+    margin-left: 60px;
+    border-radius: 10px;
+    // margin-bottom: 10px;
+    &.start-button {
+        margin-bottom: 45px;
+        margin-top: 10px;
+        font-size: 18pt;
+    }
+}
+
+.rotate-90 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+.button-text {
+    font-size: 8pt;
+}
+
+.audio {
+    z-index: 10000;
+    height: 100%;
+    width: 100%;
+  }

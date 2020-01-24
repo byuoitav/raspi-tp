@@ -107,9 +107,7 @@ $inputs-height: 40vh;
 }
 
 .room-control-info {
+    text-align: center;
+    width: $max-width;
     padding-top: 10px;
-    padding-left: 10px;
-    font-size: 13pt;
-    height: wrap;
-    position: fixed;
 }

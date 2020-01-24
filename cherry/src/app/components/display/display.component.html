@@ -1,8 +1,3 @@
-<!-- <div class = "room-control-info">
-  <div>{{data.roomControlUrl}}</div>
-  <div>Key: {{data.controlKey}}</div>
-</div> -->
-
 <div class="outputs">
     <!--
         As outputs get closer to the sides of the screen,
@@ -40,6 +35,17 @@
 </div>
 
 <div class="inputs">
+
+  <!-- to open up the mobile control qr code -->
+  <ng-container *ngIf="data?.controlKey != null">
+
+      <div class="room-control-info" (click)="openMobileControlDialog(); command.buttonPress('open mobile control modal')" 
+      (press)="openMobileControlDialog(); command.buttonPress('long press open mobile control modal')">
+        <div> {{data.roomControlUrl}} </div>
+        <div> Key: {{data.controlKey}} </div>
+      </div>
+  </ng-container>
+    
     <!-- blank button -->
     <div>
         <button mat-button class="input mat-elevation-z7" [color]="isOneBlanked() ? 'accent' : ''" (click)="blank(); command.buttonPress('blank', getSelectedDisplayNames())" (press)="

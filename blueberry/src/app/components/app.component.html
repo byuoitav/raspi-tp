@@ -1,17 +1,66 @@
+<audiocontrol #audio class="audio"></audiocontrol>
+<app-projector #screen class="audio"></app-projector>
+
+
 <div class="basediv">
     <management [enabled]="showManagement()"></management>
 
     <ng-container>
-        <div *ngIf="home?.wheel?.getPower() !== 'on'" class="lock" (click)="unlock(); command.buttonPress('power on')" (press)="unlock(); command.buttonPress('long press power on')">
+        <div *ngIf="home?.wheel?.getPower() !== 'on'" class="lock">
             <ng-container *ngIf="!unlocking; else poweringOn">
                 <!-- byu logo -->
                 <object type="image/svg+xml" data="db/logo.svg" class="logo"> </object>
 
                 <!-- unlock text -->
-                <span class="text unlock"></span>
-                <div *ngIf="controlKey" class="unlock-code">
-                    <div>{{roomControlUrl}}</div>
-                    <div> control key: {{controlKey}} </div>
+                <div class="text unlock">
+                <button
+                    mat-stroked
+                    class="lock-screen-button start-button"
+                    (click)="unlock(); command.buttonPress('power on')"
+                    (press)="unlock(); command.buttonPress('long press power on')"
+                >
+                Start
+                </button>
+
+                </div>
+                <!-- <span class="text unlock" (click)="unlock(); command.buttonPress('power on')" (press)="unlock(); command.buttonPress('long press power on')"></span> -->
+                <div  class="optional-buttons">
+                    <ng-container *ngIf="data?.panel?.preset?.screens?.length > 0">
+                        <button
+                            mat-stroked
+                            class="lock-screen-button"
+                            (click)="screen.show(data?.panel?.preset); command.buttonPress('open projector modal')"
+                            (press)="screen.show(data?.panel?.preset); command.buttonPress('long press open projector modal')"
+                        >
+                        <mat-icon>unfold_more</mat-icon>
+                        <div class="button-text">Screen Control</div>
+                        </button>
+                    </ng-container>
+                    
+                    <ng-container *ngIf="controlKey">
+                        <button
+                            mat-stroked
+                            class="lock-screen-button"
+                            (click)="showMobileControl(); command.buttonPress('open room control modal')"
+                            (press)="showMobileControl(); command.buttonPress('open room control modal')"
+                        >
+                        <mat-icon>phone_iphone</mat-icon>
+                        <div class="button-text">Key: {{data.controlKey}}</div>
+                        </button>
+                    </ng-container>
+
+
+                    <ng-container *ngIf="data?.panel?.preset?.independentAudioDevices?.length > 0 && !audio.isShowing()">
+                        <button
+                            mat-stroked
+                            class="lock-screen-button"
+                            (click)="audio.show(data?.panel?.preset); command.buttonPress('open audio modal')"
+                            (press)="audio.show(data?.panel?.preset); command.buttonPress('long press open audio modal')"
+                        >
+                        <mat-icon class="rotate-90">tune</mat-icon>
+                        <div class="button-text">Audio Control</div>
+                        </button>
+                    </ng-container>
                 </div>
             </ng-container>
 

@@ -13,11 +13,11 @@ import { Preset } from "../../objects/objects";
 import { AudioDevice } from "../../objects/status.objects";
 
 @Component({
-  selector: "audiocontrol",
-  templateUrl: "./audiocontrol.component.html",
-  styleUrls: ["./audiocontrol.component.scss"]
+  selector: "lock-screen-audio",
+  templateUrl: './lockscreenaudio.component.html',
+  styleUrls: ['./lockscreenaudio.component.scss']
 })
-export class AudiocontrolComponent implements AfterViewInit, OnChanges {
+export class LockScreenAudioComponent {
   @ViewChild("tabs")
   tabs: MatTabGroup;
   @Input()
@@ -32,11 +32,13 @@ export class AudiocontrolComponent implements AfterViewInit, OnChanges {
   groupPages: Map<string, number[]> = new Map();
   groupCurPage: Map<string, number> = new Map();
 
+  _show = false;
+
   audioTypes: string[]; // used to do optimize change detection (mostly at the beginning)
 
   constructor(public command: CommandService, private ref: ChangeDetectorRef) {}
   
-  ngAfterViewInit() {
+  ngOnInit() {
     if (!this.audioGroups) {
       console.info("not showing audio groups");
     }
@@ -45,7 +47,7 @@ export class AudiocontrolComponent implements AfterViewInit, OnChanges {
     // but, it moves the second line of tabs to be left aligned
     this.tabs._elementRef.nativeElement.getElementsByClassName(
       "mat-tab-labels"
-    )[0].style.justifyContent = "flex-start";
+    )[0].style.justifyContent = "center";
   }
 
   ngOnChanges(changes) {
@@ -111,6 +113,15 @@ export class AudiocontrolComponent implements AfterViewInit, OnChanges {
       );
       this.curDisplayPage = 0;
     }
+    this._show = true;
+  }
+
+  hide() {
+    this._show = false;
+  }
+
+  isShowing() {
+    return this._show;
   }
 
   private updateAudioTypes() {

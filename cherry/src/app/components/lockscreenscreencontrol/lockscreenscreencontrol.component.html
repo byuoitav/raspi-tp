@@ -1,0 +1,63 @@
+<div class="container primary-background" [class.show]="_show">
+    <button
+    color="warn"
+    class="exit"
+    (click)="hide()"
+    (press)="hide()"
+    mat-button
+  >
+    <mat-icon>keyboard_backspace</mat-icon>
+    <span>Back</span>
+  </button>
+
+  <div class="projectorscreens">
+    <ng-container *ngIf="devices.length > 0">
+      <h1 class="header text title">Projector Control</h1>
+
+      <ng-container *ngIf="devices.length <= 4">
+        <div class="no-scroll">
+          <div class="content">
+            <div class="mixers">
+              <div class="sliders">
+                <div
+                  *ngFor="let s of devices; let i = index"
+                  [id]="'device' + i"
+                  class="slider-container"
+                >
+                  <span class="display">{{s.display_name}}</span>
+                  <button 
+                    mat-raised-button
+                    class="button"
+                    color="primary"
+                    (click)="projectorUp(s)"
+                  >
+                  <mat-icon class="icon">keyboard_arrow_up</mat-icon>
+                  </button>
+
+                  <button 
+                    mat-raised-button
+                    class="button"
+                    color="primary"
+                    (click)="projectorStop(s)"
+                  >
+                  STOP
+                  </button>
+
+                  <button 
+                    mat-raised-button
+                    class="button"
+                    color="primary"
+                    (click)="projectorDown(s)"
+                  >
+                  <mat-icon class="icon">keyboard_arrow_down</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>>
+    </ng-container>
+
+  </div>
+</div>

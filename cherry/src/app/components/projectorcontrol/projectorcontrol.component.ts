@@ -1,9 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { MatTabGroup } from "@angular/material/tabs";
 import { Preset, DeviceConfiguration } from "../../objects/objects";
 import {
   Input,
-  ViewChild,
 } from "@angular/core";
 import { CommandService } from "../../services/command.service";
 
@@ -24,8 +22,10 @@ export class ProjectorControlComponent implements OnInit {
   ngOnInit() {
     this.devices.length = 0;
 
-    for (const s of this.preset.screens) {
-      this.devices.push(s);
+    if (this.preset) {
+      for (const s of this.preset.screens) {
+        this.devices.push(s);
+      }
     }
 
     const pages = Math.ceil(this.devices.length / 4);

@@ -9,6 +9,13 @@ import { HelpDialog } from "../dialogs/help.dialog";
 import { Output } from "../objects/status.objects";
 import { APIService } from "../services/api.service";
 import { Event, BasicRoomInfo } from "../services/socket.service";
+import { MobileControlComponent } from "./mobilecontrol/mobilecontrol.component";
+import { AudiocontrolComponent } from "./audiocontrol/audiocontrol.component";
+import { ProjectorControlComponent } from "./projectorcontrol/projectorcontrol.component";
+import { MatDialogModule } from '@angular/material';
+import { LockScreenAudioComponent } from "./lockscreenaudio/lockscreenaudio.component";
+import { LockScreenScreenControlComponent } from "./lockscreenscreencontrol/lockscreenscreencontrol.component";
+
 
 const HIDDEN = "hidden";
 const QUERY = "query";
@@ -34,6 +41,12 @@ export class AppComponent {
 
   public selectedTabIndex: number;
 
+  @ViewChild(LockScreenAudioComponent)
+  public lockaudio: LockScreenAudioComponent;
+
+  @ViewChild(LockScreenScreenControlComponent)
+  public screen: LockScreenScreenControlComponent;
+
   constructor(
     public data: DataService,
     public command: CommandService,
@@ -47,10 +60,21 @@ export class AppComponent {
     });
   }
 
+  public showManagement(): boolean {
+    if (this.screen.isShowing() || this.lockaudio.isShowing()) {
+      return false;
+    }
+
+    if (this.isPoweredOff) {
+      return true;
+    }
+  }
+
   public isPoweredOff(): boolean {
     if (!this.loaded) {
       return true;
     }
+
     return !Output.isPoweredOn(this.data.panel.preset.displays);
   }
 
@@ -116,6 +140,13 @@ export class AppComponent {
     const dialogRef = this.dialog.open(HelpDialog, {
       width: "70vw",
       disableClose: true
+    });
+  }
+
+  public openMobileControlDialog() {
+    const dialogRef = this.dialog.open(MobileControlComponent, {
+      width: "70vw",
+      height: "52.5vw"
     });
   }
 }

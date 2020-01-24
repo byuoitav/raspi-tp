@@ -24,8 +24,9 @@ $button-width: 5vw;
   }
 
   &.show {
+    background-color: #263238;
     display: unset;
-    z-index: 2000;
+    z-index: 10000;
   }
 }
 

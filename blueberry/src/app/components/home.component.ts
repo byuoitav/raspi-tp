@@ -39,6 +39,8 @@ import { MessageModalComponent } from "../modals/messagemodal/messagemodal.compo
 import { Action } from "./activity-button/activity-button.component";
 import { StreamModalComponent } from "app/modals/streammodal/streammodal.component";
 import { ProjectorComponent } from "./projector/projector.component";
+import { MobileControlModal } from "../modals/mobilecontrolmodal/mobilecontrolmodal.component";
+
 
 export const SHARE = "start_share";
 export const STOP_SHARE = "stop_share";
@@ -144,7 +146,6 @@ export class HomeComponent implements OnInit {
     this.data.loaded.subscribe(() => {
       this.updateFromEvents();
       this.setupInputFunctions();
-      this.getCode();
 
       this.updateHelp();
     });
@@ -900,14 +901,9 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  public getCode() {
-    const preset = this.data.panel.preset.name;
-    this.api.getControlKey(preset).subscribe(data => {
-      this.controlKey = data["controlKey"];
-      this.roomControlUrl = data["url"];
-    }, err => {
-      console.warn("Unable to get Control Key: " + err);
+  public showMobileControl() {
+    const ref = this.dialog.open(MobileControlModal, {
+      width: "80vw",
     });
-
   }
 }

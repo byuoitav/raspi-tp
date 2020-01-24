@@ -1,0 +1,18 @@
+<h1 mat-dialog-title class="text title">Room Control</h1>
+
+<div mat-dialog-content class="text room-info">
+  {{data.roomControlUrl}}<br/>
+  Key: {{data.controlKey}}
+</div>
+
+<div class="items secondary-theme">
+    <ngx-qrcode [qrc-element-type]="elementType" [qrc-value]="value">
+    </ngx-qrcode>
+</div>
+
+
+<div mat-dialog-actions class="items secondary-theme">
+  <button mat-raised-button color="warn" (click)="cancel()" press="cancel()">
+    Okay
+  </button>
+</div>
