@@ -74,9 +74,9 @@ export class AppComponent {
 
   public isPoweredOff(): boolean {
 
-    if (!this.loaded) {
-      return true;
-    }
+    // if (!this.loaded) {
+    //   return true;
+    // }
 
     return !Output.isPoweredOn(this.data.panel.preset.displays);
   }
