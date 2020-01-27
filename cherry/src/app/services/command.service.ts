@@ -52,6 +52,8 @@ class CommandRequest {
 @Injectable()
 export class CommandService {
   public commandInProgress = false;
+  public mobileEmitter: EventEmitter<boolean>
+
 
   private options: RequestOptions;
 

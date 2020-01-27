@@ -27,6 +27,7 @@ const PRESET_SWITCH = "preset-switch";
 @Injectable()
 export class DataService {
   public loaded: EventEmitter<boolean>;
+  public mobileEmitter: EventEmitter<boolean> = new EventEmitter;
 
   public panel: Panel;
   public inputs: Input[] = [];
@@ -43,7 +44,7 @@ export class DataService {
   constructor(
     private api: APIService,
     private socket: SocketService,
-    private http: Http
+    private http: Http,
   ) {
     this.loaded = new EventEmitter<boolean>();
 
@@ -370,6 +371,7 @@ export class DataService {
               output = this.displays.find(d => d.name === split[2]);
               if (output != null) {
                 output.power = e.Value;
+                this.mobileEmitter.emit(true);
               }
 
               output = this.audioDevices.find(a => a.name === split[2]);

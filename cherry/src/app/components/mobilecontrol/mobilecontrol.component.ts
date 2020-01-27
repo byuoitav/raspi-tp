@@ -12,7 +12,7 @@ import { DataService } from 'app/services/data.service';
 export class MobileControlComponent implements OnInit {
   public value: string;
   public elementType: 'url';
-  public _show = false;
+  public _show: boolean;
 
   constructor(
     public ref: MatDialogRef<MobileControlComponent>,
@@ -27,6 +27,7 @@ export class MobileControlComponent implements OnInit {
   ngOnInit() {
     this.ref.disableClose = true;    
     this._show = true;
+    this.monitorEvent();
   }
 
   public cancel() {
@@ -37,5 +38,14 @@ export class MobileControlComponent implements OnInit {
 
   public isShowing() {
     return this._show;
+  }
+
+  public monitorEvent() {
+    this.data.mobileEmitter.subscribe((b) => {
+      if (b == true) {
+        console.log("something was emitted");
+        this.cancel();
+      }
+    })
   }
 }
