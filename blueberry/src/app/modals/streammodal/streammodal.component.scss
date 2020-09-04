@@ -6,10 +6,16 @@
     &.lower {
         margin-top: 5vh;
     }
+    &.middle {
+        margin-top: -15px;
+    }
 }
 
 .stream-button {
     height: 10vh;
     width: 14vw;
     font-size: 14pt;
+    margin-top: 15px;
+    line-height: 1;
+    white-space: normal;
 }

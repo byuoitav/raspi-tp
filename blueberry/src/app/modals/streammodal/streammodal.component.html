@@ -1,6 +1,6 @@
 <div mat-dialog-title class="row"><span class="mat-h1">Select a stream to show:</span></div>
 <div mat-dialog-content>
-    <div class="row">
+    <div class="row middle">
         <button mat-raised-button color="accent" *ngFor="let sub of data.subInputs" class="stream-button" (click)="this.dialogRef.close(sub)">{{sub.displayname}}</button>
     </div>
 </div>
